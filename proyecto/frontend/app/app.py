@@ -1,3 +1,4 @@
+from hashlib import sha512
 from flask import Flask, render_template, send_from_directory, url_for, request, redirect
 from flask_login import LoginManager, login_manager, current_user, login_user, login_required, logout_user
 import requests
@@ -34,14 +35,20 @@ def login():
         error = None
         form = LoginForm(None if request.method != 'POST' else request.form)
         if request.method == "POST" and form.validate():
-            if form.email.data != 'admin@um.es' or form.password.data != 'admin':
-                error = 'Invalid Credentials. Please try again.'
-            else:
-                user = User(1, 'admin', form.email.data.encode('utf-8'),
-                            form.password.data.encode('utf-8'))
+
+            email = form.email.data
+            password = form.password.data
+            credenciales = {"email": email, "password": password}
+
+            response = requests.post('http://backend-rest:8080/rest/checkLogin', json=credenciales)
+
+            if response.status_code == 200: 
+                user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
                 users.append(user)
                 login_user(user, remember=form.remember_me.data)
-                return redirect(url_for('index'))
+                return redirect(url_for('profile'))
+            else:
+                error = 'Email o contraseña incorrectos'
 
         return render_template('login.html', form=form,  error=error)
 
