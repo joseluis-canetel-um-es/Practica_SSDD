@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.utils.Lazy;
@@ -22,6 +23,7 @@ import es.um.sisdist.backend.dao.utils.Lazy;
 public class SQLUserDAO implements IUserDAO
 {
     Supplier<Connection> conn;
+    private static final Logger logger = Logger.getLogger(SQLUserDAO.class.getName());
 
     public SQLUserDAO()
     {
@@ -66,13 +68,14 @@ public class SQLUserDAO implements IUserDAO
     }
 
     @Override
-    public Optional<User> getUserByEmail(String id)
+    public Optional<User> getUserByEmail(String email)
     {
+    	logger.info("SQLUSERDAO: Entra en getUserByEmail");
         PreparedStatement stm;
         try
         {
             stm = conn.get().prepareStatement("SELECT * from users WHERE email = ?");
-            stm.setString(1, id);
+            stm.setString(1, email);
             ResultSet result = stm.executeQuery();
             if (result.next())
                 return createUser(result);
@@ -139,7 +142,6 @@ public class SQLUserDAO implements IUserDAO
             int rowsAffected = stm.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            // Manejo de excepciones: capturar y manejar la excepción según sea necesario
         }
         return false;
     }
@@ -147,15 +149,14 @@ public class SQLUserDAO implements IUserDAO
     /** modificada por kholoud*/
     // elimina el user en la base de datos 
     // recibe el ID DEL USUARIO
-    public boolean deleteUser(String id) {
+    public boolean deleteUser(String email) {
         PreparedStatement stm;
         try {
-            stm = conn.get().prepareStatement("DELETE FROM users WHERE id = ?");
-            stm.setString(1, id);
+            stm = conn.get().prepareStatement("DELETE FROM users WHERE email = ?");
+            stm.setString(1, email);
             int rowsAffected = stm.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            // Manejo de excepciones: capturar y manejar la excepción según sea necesario
         }
         return false;
     }
@@ -163,16 +164,15 @@ public class SQLUserDAO implements IUserDAO
     /**modificado por kholoud*/
     
 	@Override
-	public void addVisits(String id) {
+	public void addVisits(String email) {
 		// TODO Auto-generated method stub
 		// obtener usuario y modificar su numero de visitas en la base de datos
 		 try {
-		        PreparedStatement stm = conn.get().prepareStatement("UPDATE users SET visits = visits + 1 WHERE id = ?");
-		        stm.setString(1, id);
+		        PreparedStatement stm = conn.get().prepareStatement("UPDATE users SET visits = visits + 1 WHERE email = ?");
+		        stm.setString(1, email);
 		        stm.executeUpdate();
 		        //return rowsAffected > 0;
 		    } catch (SQLException e) {
-		        // Manejo de excepciones: capturar y manejar la excepción según sea necesario
 		       // return false;
 		    }
 		

@@ -63,9 +63,9 @@ public class MongoUserDAO implements IUserDAO
     }
 
     @Override
-    public Optional<User> getUserByEmail(String id)
+    public Optional<User> getUserByEmail(String email)
     {
-        Optional<User> user = Optional.ofNullable(collection.get().find(eq("email", id)).first());
+        Optional<User> user = Optional.ofNullable(collection.get().find(eq("email", email)).first());
         return user;
     }
     
@@ -117,11 +117,11 @@ public class MongoUserDAO implements IUserDAO
 
     /**modificado por kholoud*/
 	@Override
-	public void addVisits(String id) {
+	public void addVisits(String email) {
 		// TODO Auto-generated method stub
 		// obtener usuario y modificar su numero de visitas en la base de datos
 		try {
-	        Document filter = new Document("_id", id);
+	        Document filter = new Document("email", email);
 	        Document update = new Document("$inc", new Document("visits", 1));
 	        collection.get().updateOne(filter, update);
 	        //return result.getModifiedCount() > 0;

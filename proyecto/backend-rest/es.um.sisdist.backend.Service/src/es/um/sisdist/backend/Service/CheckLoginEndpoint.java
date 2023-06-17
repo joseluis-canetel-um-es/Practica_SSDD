@@ -1,6 +1,7 @@
 package es.um.sisdist.backend.Service;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.models.UserDTO;
@@ -19,6 +20,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/checkLogin")
 public class CheckLoginEndpoint
 {
+    private static final Logger logger = Logger.getLogger(CheckLoginEndpoint.class.getName());
+
     private AppLogicImpl impl = AppLogicImpl.getInstance();
 
     // modificada para incrementar el numero de visitas
@@ -27,6 +30,8 @@ public class CheckLoginEndpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkUser(UserDTO uo)
     {
+    	logger.info("CheckLoginEndp: entra en checkUser");
+    	logger.info(uo.getEmail()+" - "+uo.getPassword());
         Optional<User> u = impl.checkLogin(uo.getEmail(), uo.getPassword());
         if (u.isPresent())
             //return Response.ok(UserDTOUtils.toDTO(u.get())).build();

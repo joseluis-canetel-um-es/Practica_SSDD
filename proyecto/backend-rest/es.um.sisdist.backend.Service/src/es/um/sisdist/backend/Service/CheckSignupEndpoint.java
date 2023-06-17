@@ -26,9 +26,6 @@ public class CheckSignupEndpoint {
 			return Response.status(Status.CONFLICT).build();
 		}
 
-		// Crear un nuevo objeto de usuario
-		// User user = new User(userDTO.getEmail(), userDTO.getName(),
-		// userDTO.getPassword(), 0);
 		// Guardar el usuario en la base de datos
 		impl.signup(userDTO.getEmail(), userDTO.getName(), userDTO.getPassword());
 

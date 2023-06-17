@@ -11,6 +11,7 @@ from models import users, User
 from forms import LoginForm, RegistrationForm
 
 import hashlib
+import logging
 
 
 app = Flask(__name__, static_url_path='')
@@ -44,10 +45,15 @@ def login():
             # se envia un hash del password
             credenciales = {"email": email, "password": hashlib.sha256( password.encode('utf-8')).hexdigest()}
             cabecera = {"Content-Type" : "application/json"}
+            logging.debug("LOGIN: se procede a hacer el POST")
 
-            response = requests.post('http://localhost:8080/service/checkLogin', headers=cabecera,json=credenciales)
+            response = requests.post('http://backend-rest:8080/Service/checkLogin', headers=cabecera,json=credenciales)
+            logging.debug("LOGIN: estado de respuesta ")
+            logging.debug(response.status_code)
+
 
             if response.status_code == 200: 
+                logging.debug("recibe 200 ok en login")
                 user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
                 users.append(user)
                 login_user(user, remember=form.remember_me.data)
@@ -61,6 +67,7 @@ def login():
 # nueva funcion para permitir registro de usuario -- KHOLOUD
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    logging.basicConfig(level=logging.DEBUG)
     if current_user.is_authenticated:
         return redirect(url_for('index')) #si ya hay user 
     else:
@@ -72,22 +79,17 @@ def signup():
             password = form.password.data
 
             cabecera = {"Content-Type" : "application/json"}
-             # Aquí almacenar los datos del usuario en la base de datos
             # llamar a backend para peticion de almacenar
             # password modificado para tomar el hash
             credenciales_registro = {"email" : email,"name" : name,  "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
-            response = requests.post('http://localhost:8080/service/checkSignup', headers = cabecera, json=credenciales_registro)
-            print("se ha hecho el request")
+            logging.debug('')
+
+            response = requests.post('http://backend-rest:8080/Service/checkSignup', headers = cabecera, json=credenciales_registro)
+            logging.debug('Este es un mensaje de depuración')
+            logging.debug(response.status_code)
             if response.status_code == 200:
-                # usuario ficticio
-                #user = User(email, name, password)
-                #users.append(user)
-
-                #login_user(user)  # Opcional: Inicia sesión automáticamente después del registro
-
-                #return redirect(url_for('index'))
-                # redirige al usuario a la vista de login para poder iniciar sesión
-                print("recibe 200 ok en registro")
+               
+                logging.debug("recibe 200 ok en registro")
                 return redirect(url_for('login')) 
         else:
             error = 'Validación de registro incorrecta'
