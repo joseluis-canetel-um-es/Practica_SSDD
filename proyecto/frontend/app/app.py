@@ -9,6 +9,8 @@ from models import users, User
 
 # Login
 from forms import LoginForm
+# Signup
+from forms import SignupForm
 
 app = Flask(__name__, static_url_path='')
 login_manager = LoginManager()
@@ -26,6 +28,65 @@ def serve_static(path):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+"""
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Validar los datos ingresados
+        
+        # Ejemplo de validación simple: verificar si el correo electrónico ya está registrado
+        if users.isEmailRegister(email):
+            error = 'El correo electrónico ya está registrado.'
+            return render_template('signup.html', error=error)
+        
+        # Crear un nuevo usuario y agregarlo a tu base de datos
+        new_user = User(name, email, password)
+        users[email] = new_user
+        
+        # Redirigir a la página de inicio de sesión o a alguna otra página adecuada
+        return redirect(url_for('login'))
+    
+    # Si la solicitud es un GET, renderizar la plantilla signup.html
+    return render_template('signup.html')
+"""
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    else:
+        error = None
+        form = SignupForm(None if request.method != 'POST' else request.form)
+        if request.method == "POST" and form.validate():
+
+            email = form.email.data
+            password = form.password.data
+            name = form.name.data
+            credenciales = {"email": email, "password": password, "name": name}
+
+            error = 'Hola'
+            """
+            response = requests.post('http://backend-rest:8080/rest/checkLogin', json=credenciales)
+
+            if response.status_code == 200: 
+                user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
+                users.append(user)
+                login_user(user, remember=form.remember_me.data)
+                return redirect(url_for('profile'))
+            else:
+                error = 'Email o contraseña incorrectos'
+            """
+            
+        return render_template('signup.html', form=form,  error=error)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

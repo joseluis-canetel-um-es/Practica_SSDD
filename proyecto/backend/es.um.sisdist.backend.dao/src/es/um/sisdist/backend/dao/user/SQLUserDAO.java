@@ -88,4 +88,35 @@ public class SQLUserDAO implements IUserDAO
             return Optional.empty();
         }
     }
+
+	@Override
+	public boolean addUser(String email, String passwordHash, String name) {
+		PreparedStatement insert;
+		
+		try {
+			
+			String token = generateUserToken(email, passwordHash, name);
+			int visits = 0;
+			
+			insert = conn.get().prepareStatement("INSERT INTO users (email, password_hash, name, token, visits) VALUES (?, ?, ?, ?, ?)");
+			insert.setString(1, email);
+			insert.setString(2, passwordHash);
+			insert.setString(3, name);
+			insert.setString(4, token);
+			insert.setInt(5, visits);
+			
+			insert.executeUpdate();
+			return true;
+			
+		} catch (SQLException e) {}
+		
+		return false;
+	}
+	
+	private String generateUserToken(String email, String passwordHash, String name) {
+		
+		String userToken = User.calculateMd5( email + passwordHash + name + UUID.randomUUID().toString().replace("-", "") );
+		return userToken;
+		
+	}
 }

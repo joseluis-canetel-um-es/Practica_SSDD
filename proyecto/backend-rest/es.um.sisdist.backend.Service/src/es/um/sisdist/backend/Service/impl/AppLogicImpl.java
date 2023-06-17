@@ -70,6 +70,19 @@ public class AppLogicImpl
     {
         return dao.getUserById(userId);
     }
+    
+    public boolean createUser(String email, String password, String name) {
+        // Verificar si el correo electrónico ya está registrado
+        Optional<User> existingUser = dao.getUserByEmail(email);
+        if (existingUser.isPresent()) {
+            // El correo electrónico ya está registrado, puedes lanzar una excepción o manejar el error de alguna manera.
+            return false;
+        }
+        
+        // Guardar el nuevo usuario en la base de datos
+        return dao.addUser(email, password, name);
+    }
+
 
     public boolean ping(int v)
     {
