@@ -112,6 +112,11 @@ public class User
         this.visits = visits;
     }
 
+    // nuevo metodo para incrementar el numero de visitas
+    public void addVisits() {
+    	this.visits = this.visits + 1;
+    }
+    
     public User(String email, String password_hash, String name, String tOKEN, int visits)
     {
         this(email, email, password_hash, name, tOKEN, visits);

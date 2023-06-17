@@ -18,7 +18,10 @@ import jakarta.ws.rs.core.MediaType;
 public class UsersEndpoint
 {
     private AppLogicImpl impl = AppLogicImpl.getInstance();
-
+    /** punto de entrada para una solicitud GET a la ruta "/u/{username}",
+     * donde "{username}" es un parámetro de ruta que representa el nombre de usuario 
+     del usuario del que se desea obtener información.
+    */
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
