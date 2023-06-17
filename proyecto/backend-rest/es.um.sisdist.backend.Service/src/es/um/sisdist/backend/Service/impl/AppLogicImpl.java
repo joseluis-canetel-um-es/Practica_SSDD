@@ -98,17 +98,19 @@ public class AppLogicImpl
         	dao.addVisits(email); // cuando se accede al endpoint, se debe incrementar el numero de visitas
             logger.info("AppLogicImpl: entra en no empty");
             String hashed_pass = UserUtils.md5pass(pass);
-            if (0 == hashed_pass.compareTo(u.get().getPassword_hash()))
+            if (0 == hashed_pass.compareTo(u.get().getPassword_hash())) {
+                logger.info("AppLogicImpl: password correcto");
                 return u;
+            }
         }
 
         return Optional.empty();
     }
     
     // REGISTRO - inserta en db el usuario
-    public void signup(String email, String name, String password) {
+    public boolean signup(String email, String name, String password) {
     	logger.info("AppLogicImpl: entra en signup--hacer insertUser");
-    	dao.insertUser(email, name, password);
+    	return dao.insertUser(email, name, password);
     	//return false;
     	
     }

@@ -27,10 +27,14 @@ public class CheckSignupEndpoint {
 		}
 
 		// Guardar el usuario en la base de datos
-		impl.signup(userDTO.getEmail(), userDTO.getName(), userDTO.getPassword());
+		boolean registrado = impl.signup(userDTO.getEmail(), userDTO.getName(), userDTO.getPassword());
+		if(registrado) {
+			return Response.ok().build();
 
+		}else {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		// Devolver una respuesta ok
-		return Response.ok().build();
 	}
 
 }

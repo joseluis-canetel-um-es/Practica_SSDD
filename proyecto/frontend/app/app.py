@@ -54,7 +54,7 @@ def login():
 
             if response.status_code == 200: 
                 logging.debug("recibe 200 ok en login")
-                user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
+                user = User(response.json()['id'], response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
                 users.append(user)
                 login_user(user, remember=form.remember_me.data)
                 return redirect(url_for('profile'))
@@ -109,7 +109,8 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     for user in users:
-        if user.id == int(user_id):
+        #if user.id == int(user_id):
+        if user.id == user_id:
             return user
     return None
 

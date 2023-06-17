@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import es.um.sisdist.backend.dao.models.User;
+import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.utils.Lazy;
 
 /**
@@ -77,8 +78,11 @@ public class SQLUserDAO implements IUserDAO
             stm = conn.get().prepareStatement("SELECT * from users WHERE email = ?");
             stm.setString(1, email);
             ResultSet result = stm.executeQuery();
-            if (result.next())
+            if (result.next()) {
+            	logger.info("SQLUSERDAO: entra en result.next()");
                 return createUser(result);
+
+            }
         } catch (SQLException e)
         {
             // Fallthrough
@@ -128,14 +132,14 @@ public class SQLUserDAO implements IUserDAO
     
     /** modificada por kholoud*/
     // inserta el user en la base de datos 
-    // falta modificar password ID Y TOKEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    // password ID Y TOKEN ????????????????????
     public boolean insertUser(String email, String name, String password) {
         PreparedStatement stm;
         try {
             stm = conn.get().prepareStatement("INSERT INTO users (id, email, password_hash, name, token, visits) VALUES (?, ?, ?, ?, ?, ?)");
             stm.setString(1, UUID.randomUUID().toString()); 
             stm.setString(2, email);
-            stm.setString(3, password);
+            stm.setString(3, UserUtils.md5pass(password)); // modificado
             stm.setString(4, name);
             stm.setString(5, UUID.randomUUID().toString());
             stm.setInt(6, 0);
