@@ -45,7 +45,7 @@ def login():
             credenciales = {"email": email, "password": hashlib.sha256( password.encode('utf-8')).hexdigest()}
             cabecera = {"Content-Type" : "application/json"}
 
-            response = requests.post('http://localhost:8080/checkLogin', headers=cabecera,json=credenciales)
+            response = requests.post('http://localhost:8080/service/checkLogin', headers=cabecera,json=credenciales)
 
             if response.status_code == 200: 
                 user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
@@ -76,7 +76,7 @@ def signup():
             # llamar a backend para peticion de almacenar
             # password modificado para tomar el hash
             credenciales_registro = {"email" : email,"name" : name,  "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
-            response = requests.post('http://localhost:8080/checkSignup', headers = cabecera, json=credenciales_registro)
+            response = requests.post('http://localhost:8080/service/checkSignup', headers = cabecera, json=credenciales_registro)
             print("se ha hecho el request")
             if response.status_code == 200:
                 # usuario ficticio
