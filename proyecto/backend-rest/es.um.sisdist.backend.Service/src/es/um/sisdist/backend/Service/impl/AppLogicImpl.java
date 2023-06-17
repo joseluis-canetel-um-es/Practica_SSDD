@@ -112,4 +112,11 @@ public class AppLogicImpl
 
         return Optional.empty();
     }
+    
+    // REGISTRO - inserta en db el usuario
+    public void signup(String email, String name, String password) {
+    	dao.insertUser(email, name, password);
+    	//return false;
+    	
+    }
 }

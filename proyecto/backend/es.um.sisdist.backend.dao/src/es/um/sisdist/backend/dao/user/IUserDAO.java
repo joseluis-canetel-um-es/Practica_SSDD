@@ -10,6 +10,14 @@ public interface IUserDAO
 
     public Optional<User> getUserByEmail(String id);
     
+<<<<<<< HEAD
     public boolean addUser(String email, String passwordHash, String name);
     
+=======
+    public void addVisits(String id); // incrementa el numero de visitas
+    public boolean insertUser(String email, String name, String password);
+    public boolean deleteUser(String id);
+    public boolean updateUser(User user);
+ 
+>>>>>>> branch 'main' of https://github.com/joseluis-canetel-um-es/Practica_SSDD.git
 }

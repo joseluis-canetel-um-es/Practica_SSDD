@@ -8,9 +8,16 @@ import os
 from models import users, User
 
 # Login
+<<<<<<< HEAD
 from forms import LoginForm
 # Signup
 from forms import SignupForm
+=======
+from forms import LoginForm, RegistrationForm
+
+import hashlib
+
+>>>>>>> branch 'main' of https://github.com/joseluis-canetel-um-es/Practica_SSDD.git
 
 app = Flask(__name__, static_url_path='')
 login_manager = LoginManager()
@@ -99,9 +106,11 @@ def login():
 
             email = form.email.data
             password = form.password.data
-            credenciales = {"email": email, "password": password}
+            # se envia un hash del password
+            credenciales = {"email": email, "password": hashlib.sha256( password.encode('utf-8')).hexdigest()}
+            cabecera = {"Content-Type" : "application/json"}
 
-            response = requests.post('http://backend-rest:8080/rest/checkLogin', json=credenciales)
+            response = requests.post('http://localhost:8080/checkLogin', headers=cabecera,json=credenciales)
 
             if response.status_code == 200: 
                 user = User(int(response.json()['id']), response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
@@ -112,6 +121,42 @@ def login():
                 error = 'Email o contraseña incorrectos'
 
         return render_template('login.html', form=form,  error=error)
+    
+
+# nueva funcion para permitir registro de usuario -- KHOLOUD
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('index')) #si ya hay user 
+    else:
+        error = None
+        form = RegistrationForm(None if request.method != 'POST' else request.form)
+        if request.method == "POST" and form.validate():
+            email = form.email.data
+            name = form.name.data
+            password = form.password.data
+
+            cabecera = {"Content-Type" : "application/json"}
+             # Aquí almacenar los datos del usuario en la base de datos
+            # llamar a backend para peticion de almacenar
+            # password modificado para tomar el hash
+            credenciales_registro = {"email" : email,"name" : name,  "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
+            response = requests.post('http://localhost:8080/checkSignup', headers = cabecera, json=credenciales_registro)
+            print("se ha hecho el request")
+            if response.status_code == 200:
+                # usuario ficticio
+                #user = User(email, name, password)
+                #users.append(user)
+
+                #login_user(user)  # Opcional: Inicia sesión automáticamente después del registro
+
+                #return redirect(url_for('index'))
+                # redirige al usuario a la vista de login para poder iniciar sesión
+                print("recibe 200 ok en registro")
+                return redirect(url_for('login')) 
+        else:
+            error = 'Validación de registro incorrecta'
+    return render_template('signup.html', form=form, error=error)
 
 @app.route('/profile')
 @login_required
