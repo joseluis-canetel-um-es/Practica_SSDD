@@ -25,6 +25,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import es.um.sisdist.backend.dao.models.User;
+import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.utils.Lazy;
 
 /**
@@ -75,7 +76,7 @@ public class MongoUserDAO implements IUserDAO
     @Override
    public boolean insertUser(String email, String name, String password) {
         try {
-            User user = new User(email, password, name, UUID.randomUUID().toString(),0); // Crear objeto User con los datos proporcionados
+            User user = new User(email, UserUtils.md5pass(password), name, UUID.randomUUID().toString(),0); // Crear objeto User con los datos proporcionados
             collection.get().insertOne(user);
             return true;
         } catch (Exception e) {

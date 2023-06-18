@@ -90,16 +90,11 @@ public class AppLogicImpl
     public Optional<User> checkLogin(String email, String pass)
     {
         Optional<User> u = dao.getUserByEmail(email);
-        logger.info("AppLogicImpl: entra en checkLogin....PASSWORD");
-        logger.info(pass);
-
         if (u.isPresent())
         {
         	dao.addVisits(email); // cuando se accede al endpoint, se debe incrementar el numero de visitas
-            logger.info("AppLogicImpl: entra en no empty");
             String hashed_pass = UserUtils.md5pass(pass);
             if (0 == hashed_pass.compareTo(u.get().getPassword_hash())) {
-                logger.info("AppLogicImpl: password correcto");
                 return u;
             }
         }
@@ -109,9 +104,6 @@ public class AppLogicImpl
     
     // REGISTRO - inserta en db el usuario
     public boolean signup(String email, String name, String password) {
-    	logger.info("AppLogicImpl: entra en signup--hacer insertUser");
-    	return dao.insertUser(email, name, password);
-    	//return false;
-    	
+    	return dao.insertUser(email, name, password);    	
     }
 }

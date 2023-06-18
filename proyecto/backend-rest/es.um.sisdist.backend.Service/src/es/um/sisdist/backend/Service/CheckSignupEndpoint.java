@@ -34,7 +34,6 @@ public class CheckSignupEndpoint {
 		}else {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		// Devolver una respuesta ok
 	}
 
 }
