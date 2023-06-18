@@ -3,6 +3,8 @@
  */
 package es.um.sisdist.backend.Service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -10,6 +12,8 @@ import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
+import es.um.sisdist.backend.dao.database.IDatabaseDAO;
+import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.user.IUserDAO;
@@ -24,6 +28,7 @@ public class AppLogicImpl
 {
     IDAOFactory daoFactory;
     IUserDAO dao;
+    IDatabaseDAO daodb;
 
     private static final Logger logger = Logger.getLogger(AppLogicImpl.class.getName());
 
@@ -106,4 +111,43 @@ public class AppLogicImpl
     public boolean signup(String email, String name, String password) {
     	return dao.insertUser(email, name, password);    	
     }
+    
+    /************************************************************************/
+    /**DATABASES*/
+    
+    // crea una base de datos relacionada al id de un usuario
+    // se debe insertar un valor inicial en la lista
+    public boolean createDatabase(String name, String idUser, String key, String Value) {
+    	List<String> listAdd = new ArrayList<String>();
+    	String add = key+":"+Value;
+    	listAdd.add(add);
+    	return daodb.insertDatabase(name, idUser, listAdd);
+    	//return false;
+    }
+    
+    public boolean deleteDatabase(String idUser, String name) {
+    	return daodb.deleteDatabase(idUser,name);
+    }
+    
+    
+    // devuelve la database dado su id
+    public Optional<DataBase> getDatabase(String db) {
+    	return Optional.of(daodb.getDatabase(db));
+    	//return null;
+    }
+    
+    // dado un id de usuario retorna las bases de datos relacioandos
+    public ArrayList<DataBase> getDatabasesByUserId(String userId) {
+        try {
+            //MongoCollection<DataBase> mongoCollection = collection.get(); // Obtener la colección de la base de datos
+           // List<DataBase> result = mongoCollection.find(eq("idUser", userId)).into(new ArrayList<>());
+        	ArrayList<DataBase> result = daodb.getDatabases(userId);
+            return result;
+        } catch (Exception e) {
+            // Manejar la excepción según sea necesario
+        }
+
+        return null;
+    }
+    
 }

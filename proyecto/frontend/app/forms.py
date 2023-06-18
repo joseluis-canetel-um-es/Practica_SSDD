@@ -14,3 +14,10 @@ class RegistrationForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     password = PasswordField('password', validators=[InputRequired()])
     submit = SubmitField('Sign Up')
+
+# clase definida para el formulario de la base de datos
+class DatabaseForm(FlaskForm):
+    name = StringField('name', validators=[InputRequired()])
+    key = StringField('key', validators=[InputRequired()])
+    value = StringField('value', validators=[InputRequired()])
+    submit = SubmitField('Create database')
