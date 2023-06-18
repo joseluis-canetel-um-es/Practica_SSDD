@@ -45,21 +45,16 @@ def login():
             # se envia un hash del password
             credenciales = {"email": email, "password": hashlib.sha256( password.encode('utf-8')).hexdigest()}
             cabecera = {"Content-Type" : "application/json"}
-            logging.debug("LOGIN: se procede a hacer el POST")
 
             response = requests.post('http://backend-rest:8080/Service/checkLogin', headers=cabecera,json=credenciales)
-            logging.debug("LOGIN: estado de respuesta ")
-            logging.debug(response.status_code)
-
 
             if response.status_code == 200: 
-                logging.debug("recibe 200 ok en login")
                 user = User(response.json()['id'], response.json()['name'], form.email.data.encode('utf-8'), form.password.data.encode('utf-8'),response.json()['token'], int(response.json()['visits']))
                 users.append(user)
                 login_user(user, remember=form.remember_me.data)
                 return redirect(url_for('profile'))
             else:
-                error = 'Email o contraseña incorrectos'
+                error = 'Email o contraseña incorrectos' + str(response.status_code)
 
         return render_template('login.html', form=form,  error=error)
     
@@ -81,18 +76,15 @@ def signup():
             cabecera = {"Content-Type" : "application/json"}
             # llamar a backend para peticion de almacenar
             # password modificado para tomar el hash
-            credenciales_registro = {"email" : email,"name" : name,  "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
-            logging.debug('')
+            credenciales_registro = {"email" : email, "name" : name, "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
 
             response = requests.post('http://backend-rest:8080/Service/checkSignup', headers = cabecera, json=credenciales_registro)
-            logging.debug('Este es un mensaje de depuración')
-            logging.debug(response.status_code)
             if response.status_code == 200:
-               
-                logging.debug("recibe 200 ok en registro")
                 return redirect(url_for('login')) 
-        else:
-            error = 'Validación de registro incorrecta'
+            elif response.status_code == 409:
+                error = "Email ya registrado"
+            else:
+                error = 'Validación de registro incorrecta'
     return render_template('signup.html', form=form, error=error)
 
 @app.route('/profile')
