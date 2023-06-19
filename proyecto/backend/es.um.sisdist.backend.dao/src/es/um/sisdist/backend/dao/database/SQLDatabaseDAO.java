@@ -176,9 +176,10 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 	}
 	*/
-/**
+
+	// eliminar un par clave valor
 	@Override
-	public void deleteClaveValor(String db, String clave) {
+	public boolean deleteClaveValor(String db, String clave) {
 		// Elimina un par Clave,Valor de la base de datos
 		try {
 			// Obtener la instancia de la base de datos
@@ -186,18 +187,37 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 			if (database != null) {
 				// Obtener el mapa de pares clave-valor de la base de datos
-				HashMap<String, String> pares = database.getPares();
+				List<String> pares = database.getPares();
 
 				// Eliminar la clave especificada del mapa de pares
-				pares.remove(clave);
+				//pares.remove(clave);
 
 				// Convertir el mapa a una representación de cadena
 				StringBuilder sb = new StringBuilder();
 
-				for (Map.Entry<String, String> entry : pares.entrySet()) {
+				for (String keyValue : pares){
+					/**
 					String key = entry.getKey();
 					String value = entry.getValue();
+					sb.append(key).append(":").append(value).append(",");*/
+					String[] parts = keyValue.split(":");
+
+					// Obtener la clave y el valor y si coincide key, se elimina
+					String key = parts[0];
+					String value = parts[1];
+					if(key.equals(clave)) {
+						pares.remove(keyValue);
+					}
+				}
+				
+				for(String keyValue: pares) {
+					String[] parts = keyValue.split(":");
+
+					// Obtener la clave y el valor y si coincide key, se elimina
+					String key = parts[0];
+					String value = parts[1];
 					sb.append(key).append(":").append(value).append(",");
+
 				}
 
 				// Eliminar la última coma
@@ -212,11 +232,14 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 				// Ejecutar la consulta de update
 				statement.executeUpdate();
+				return true;
 			}
 		} catch (SQLException e) {
 		}
+		return false;
+
 	}
-*/
+
 	@Override
 	public void getValues() {
 		// Obtiene lista de todos los pares Clave,Valor de la base de datos

@@ -15,7 +15,7 @@ public interface IDatabaseDAO {
 	 public boolean deleteDatabase(String idUser, String databaseName);
 	 public DataBase getDatabase(String databaseId);
 	// public void addClaveValor(String db, String clave, String valor);
-	// public void deleteClaveValor(String db, String clave);
+	 public boolean deleteClaveValor(String dbId, String clave);
 	 public void getValues(); // listar valores de la bd
 	 public ArrayList<DataBase> getDatabases(String userId);
 }

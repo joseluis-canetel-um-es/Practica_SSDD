@@ -59,6 +59,7 @@ public class UsersEndpoint
     }
  // metodo para que el usuario pueda crear bases de datos
  	@POST
+    @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
  	public Response createDatabase(@PathParam("id") String userId, String databaseName, String key, String value) {
  		// obtener los datos iniciales de databaseRequest.getD()
@@ -74,7 +75,7 @@ public class UsersEndpoint
 
  	// metodo consulta de bases de datos
  	@GET
-     @Path("/{name}")
+     @Path("/{id}/db/{name}")
      public Response getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
          impl.getDatabase(databaseName);
 
@@ -95,6 +96,21 @@ public class UsersEndpoint
  	        } else {
  	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server Error si hubo un error al eliminar
  	        }
+ 	    
+ 	}
+ 	
+ 	// Eliminar un par clave/valor de la base de datos
+ 	@DELETE
+ 	@Path("/{id}/db/{dbid}/d/{key}")
+ 	public Response deleteKeyValue(@PathParam("id") String userId, @PathParam("dbid") String databaseId,@PathParam("key") String clave) {
+
+		boolean deleted = impl.deleteKeyValue(userId, databaseId, clave);
+
+ 		if (deleted) {
+			return Response.ok().build(); // Respuesta HTTP 200 OK si se eliminó correctamente
+		} else {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server
+		}
  	    
  	}
 }

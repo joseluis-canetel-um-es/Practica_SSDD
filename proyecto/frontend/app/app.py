@@ -138,6 +138,7 @@ def user_databases():
     error = None
     id = current_user.id
     try:
+        # hay que modificar la url
         response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db')
     except:
         return redirect(url_for('error'))
@@ -153,6 +154,26 @@ def user_databases():
         error = "No se ha podido devolver las bases de datos"
         return render_template('error.html', error = error)
 
+# eliminar un value dado su key de la base de datos
+################################################################################################Falta modificar
+@app.route('/profile/user_databases/dbid/delete')
+@login_required
+def delete_key():
+    error = None
+    id = current_user.id
+    try:
+        # Realizar la solicitud DELETE
+        response = requests.delete('http://backend-rest:8080/Service/u/{}/db/{}/d/key'.format(id, DBID))
+    except:
+        return redirect(url_for('error'))
+    
+    if response.status_code == 200:
+        # La entrada se eliminó correctamente
+        return redirect(url_for('user_databases'))
+    else:
+        error = "No se ha podido eliminar la entrada de la base de datos"
+        return render_template('error.html', error=error)
+    
 
 @app.route('/profile')
 @login_required

@@ -150,4 +150,12 @@ public class AppLogicImpl
         return null;
     }
     
+    // dado un id de db y una clave, elimina el par <k,v> de la db
+    public boolean deleteKeyValue(String userId, String dbId, String key) {
+
+		boolean deleted = daodb.deleteClaveValor(dbId, key);
+		return deleted;
+
+    }
+    
 }
