@@ -114,17 +114,15 @@ public class AppLogicImpl
     
     /************************************************************************/
     /**DATABASES
+     */
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
-    public boolean createDatabase(String name, String idUser, String key, String Value) {
-    	List<String> listAdd = new ArrayList<String>();
-    	String add = key+":"+Value;
-    	listAdd.add(add);
-    	return daodb.insertDatabase(name, idUser, listAdd);
-    	//return false;
+    public boolean createDatabase(String name, String idUser, List<String> pares) {
+    	return daodb.insertDatabase(name, idUser, pares);
     }
     
+    /**
     public boolean deleteDatabase(String idUser, String name) {
     	return daodb.deleteDatabase(idUser,name);
     }

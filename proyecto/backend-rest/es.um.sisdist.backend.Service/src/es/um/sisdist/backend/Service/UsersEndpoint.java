@@ -2,6 +2,7 @@ package es.um.sisdist.backend.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.DataBase;
@@ -25,6 +26,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/u")
 public class UsersEndpoint
 {
+    private static final Logger logger = Logger.getLogger(AppLogicImpl.class.getName());
+
     private AppLogicImpl impl = AppLogicImpl.getInstance();
     /** punto de entrada para una solicitud GET a la ruta "/u/{username}",
      * donde "{username}" es un parámetro de ruta que representa el nombre de usuario 
@@ -57,22 +60,28 @@ public class UsersEndpoint
 
     	}
     }
- // metodo para que el usuario pueda crear bases de datos
+    */
+    
+ 	// metodo para que el usuario pueda crear bases de datos
  	@POST
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
- 	public Response createDatabase(@PathParam("id") String userId, String databaseName, String key, String value) {
+ 	public Response createDatabase(@PathParam("id") String userId, DatabaseDTO databaseDTO) {
  		// obtener los datos iniciales de databaseRequest.getD()
-
+ 		logger.info("HE RECIBIDO TU SOLICITUD DE CREAR BASE");
+ 		logger.info("HE RECIBIDO TU NOMBRE");
+ 		logger.info(databaseDTO.getName());
+ 		logger.info("HE RECIBIDO TUS CLAVES");
+ 		logger.info(databaseDTO.getPares().toString());
  		// crear la base de datos
- 		impl.createDatabase(databaseName, userId, key, value);
+ 		// impl.createDatabase(databaseDTO.getName(), userId, databaseDTO.getPares());
  		// Construye la URL de la base de datos
- 		String databaseUrl = "/u/" + userId + "/db/" + databaseName;
-
+ 		String databaseUrl = "/u/" + userId + "/db/" + databaseDTO.getName();
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
  		return Response.status(Response.Status.CREATED).header("Location", databaseUrl).build();
  	}
-
+ 	
+ 	/**
  	// metodo consulta de bases de datos
  	@GET
      @Path("/{id}/db/{name}")

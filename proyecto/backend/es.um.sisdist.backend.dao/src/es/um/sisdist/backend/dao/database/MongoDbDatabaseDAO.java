@@ -187,7 +187,6 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	        database.setId(UUID.randomUUID().toString()); // Generar un ID único para la base de datos
 	        database.setIdUser(idUser); // Asignar el ID del usuario asociado
 	        database.setPares(pairs); // Asignar la lista de pares clave-valor
-
 	        collection.get().insertOne(database);
 
 	        return true;
