@@ -104,20 +104,22 @@ def createDatabases():
         key = form.key.data
         value = form.value.data
 
-        clave_valor = key+':'+value
-        pares = [clave_valor]
+        #clave_valor = key+':'+value
+        #pares = [clave_valor]
 
 
         cabecera = {"Content-Type" : "application/json"}
         # llamar a backend para peticion de almacenar
         # password modificado para tomar el hash
-        datos_database = {"name" : name, "pares" : pares}
+        datos_database = {"name" : name, "key" : key, "value":value}
         # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
             error =  "Database registrada correctamente"
+        elif response.status_code == 400:
+           error = 'No se ha podido crear la base de datos'
         else:
-           error = 'Validación de registro incorrecta'
+            error = 'Error no controlado'
     return render_template('createDatabases.html', form=form, error=error)
 
 @app.route('/viewDatabases')

@@ -43,7 +43,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	public boolean deleteDatabase(String userId, String databaseName) {
 	    PreparedStatement stm;
 	    try {
-	        stm = conn.get().prepareStatement("DELETE FROM databases WHERE name = ? AND user_id = ?");
+	        stm = conn.get().prepareStatement("DELETE FROM databases WHERE name = ? AND idUser = ?");
 	        stm.setString(1, databaseName);
 	        stm.setString(2, userId);
 	        int rowsAffected = stm.executeUpdate();
@@ -273,7 +273,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	public boolean insertDatabase(String db, String idUser, List<String> pairs) {
 	    PreparedStatement stm;
 	    try {
-	        stm = conn.get().prepareStatement("INSERT INTO databases (id, name, user_id, pares) VALUES (?, ?, ?, ?)");
+	        stm = conn.get().prepareStatement("INSERT INTO databases (id, name, idUser, pares) VALUES (?, ?, ?, ?)");
 
 	        String paresString = String.join(",", pairs); // Convertir la lista de pares a una cadena separada por comas
 

@@ -43,11 +43,14 @@ public class AppLogicImpl
         daoFactory = new DAOFactoryImpl();
         Optional<String> backend = Optional.ofNullable(System.getenv("DB_BACKEND"));
         
-        if (backend.isPresent() && backend.get().equals("mongo"))
+        if (backend.isPresent() && backend.get().equals("mongo")) {
             dao = daoFactory.createMongoUserDAO();
-        else
+            daodb = daoFactory.createMongoDatabaseDAO();
+        }
+        else {
             dao = daoFactory.createSQLUserDAO();
-
+            daodb = daoFactory.createSQLDatabaseDAO();
+        }
         var grpcServerName = Optional.ofNullable(System.getenv("GRPC_SERVER"));
         var grpcServerPort = Optional.ofNullable(System.getenv("GRPC_SERVER_PORT"));
 
@@ -122,17 +125,18 @@ public class AppLogicImpl
     	return daodb.insertDatabase(name, idUser, pares);
     }
     
-    /**
+  /**
     public boolean deleteDatabase(String idUser, String name) {
     	return daodb.deleteDatabase(idUser,name);
     }
-    
+    */
     
     // devuelve la database dado su id
     public Optional<DataBase> getDatabase(String db) {
     	return Optional.of(daodb.getDatabase(db));
     	//return null;
     }
+    /**
     
     // dado un id de usuario retorna las bases de datos relacioandos
     public ArrayList<DataBase> getDatabasesByUserId(String userId) {

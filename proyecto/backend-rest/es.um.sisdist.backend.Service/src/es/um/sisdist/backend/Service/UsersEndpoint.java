@@ -1,6 +1,8 @@
 package es.um.sisdist.backend.Service;
 
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -10,6 +12,10 @@ import es.um.sisdist.models.DatabaseDTO;
 import es.um.sisdist.models.DatabaseDTOUtils;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.FormParam;
@@ -26,7 +32,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/u")
 public class UsersEndpoint
 {
-    private static final Logger logger = Logger.getLogger(AppLogicImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(UsersEndpoint.class.getName());
 
     private AppLogicImpl impl = AppLogicImpl.getInstance();
     /** punto de entrada para una solicitud GET a la ruta "/u/{username}",
@@ -66,22 +72,43 @@ public class UsersEndpoint
  	@POST
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
- 	public Response createDatabase(@PathParam("id") String userId, DatabaseDTO databaseDTO) {
+ 	public Response createDatabase(@PathParam("id") String userId, JsonObject jsonObject) {
  		// obtener los datos iniciales de databaseRequest.getD()
+ 		
  		logger.info("HE RECIBIDO TU SOLICITUD DE CREAR BASE");
- 		logger.info("HE RECIBIDO TU NOMBRE");
- 		logger.info(databaseDTO.getName());
- 		logger.info("HE RECIBIDO TUS CLAVES");
- 		logger.info(databaseDTO.getPares().toString());
+ 		
+ 	// Crear un JsonReader utilizando una cadena JSON
+      //  JsonReader jsonReader = Json.createReader(new StringReader(json));
+
+        // Obtener el JsonObject raíz
+//        JsonObject jsonObject = jsonReader.readObject();
+
+        // Obtener los valores de las propiedades del JsonObject
+        String nombre = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
+        String key = jsonObject.getString("key"); // CLAVE 
+        JsonValue value = jsonObject.get("value");
+        
+        logger.info("HE RECIBIDO TU NOMBRE");
+ 		logger.info(nombre);
+        
+ 		 logger.info("HE RECIBIDO TUS DATOS");
+  		logger.info(key+":"+value);
+         
+        List<String> pares = new ArrayList<String>();
+        pares.add(key+":"+value);
  		// crear la base de datos
- 		// impl.createDatabase(databaseDTO.getName(), userId, databaseDTO.getPares());
+ 		boolean created = impl.createDatabase(nombre, userId, pares);
  		// Construye la URL de la base de datos
- 		String databaseUrl = "/u/" + userId + "/db/" + databaseDTO.getName();
+ 		String databaseUrl = "/u/" + userId + "/db/" + nombre;
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
- 		return Response.status(Response.Status.CREATED).header("Location", databaseUrl).build();
+ 		if(created) {
+ 			return Response.status(Response.Status.CREATED).header("Location", databaseUrl).build();
+ 		}else {
+ 			return Response.status(Response.Status.BAD_REQUEST).build();
+ 		}
  	}
  	
- 	/**
+ 	
  	// metodo consulta de bases de datos
  	@GET
      @Path("/{id}/db/{name}")
@@ -91,7 +118,7 @@ public class UsersEndpoint
          return Response.ok().build();
      }
  	
- 	
+ 	/**
  	@DELETE
  	@Path("/{dbName}")
  	public Response deleteDatabase(@PathParam("id") String userId, @PathParam("dbName") String databaseName) {
