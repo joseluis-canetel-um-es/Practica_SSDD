@@ -113,7 +113,7 @@ public class AppLogicImpl
     }
     
     /************************************************************************/
-    /**DATABASES*/
+    /**DATABASES
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
@@ -157,5 +157,5 @@ public class AppLogicImpl
 		return deleted;
 
     }
-    
+    */
 }

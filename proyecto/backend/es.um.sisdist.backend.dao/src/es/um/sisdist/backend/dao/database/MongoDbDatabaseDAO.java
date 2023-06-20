@@ -212,6 +212,12 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	    }
 
 	    return null;
+	}
+
+	@Override
+	public boolean deleteClaveValor(String dbId, String clave) {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 	
 

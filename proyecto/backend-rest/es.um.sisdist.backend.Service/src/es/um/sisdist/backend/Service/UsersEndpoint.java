@@ -38,7 +38,7 @@ public class UsersEndpoint
         return UserDTOUtils.toDTO(impl.getUserByEmail(username).orElse(null));
     }
     
-    
+    /**
     // obtener las bases de datos de un usuario dado su ID
     @GET
     @Path("/{id}/db")
@@ -112,5 +112,5 @@ public class UsersEndpoint
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server
 		}
  	    
- 	}
+ 	}*/
 }
