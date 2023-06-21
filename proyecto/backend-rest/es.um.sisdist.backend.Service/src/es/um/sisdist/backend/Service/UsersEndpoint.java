@@ -86,16 +86,16 @@ public class UsersEndpoint
         // Obtener los valores de las propiedades del JsonObject
         String nombre = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
         String key = jsonObject.getString("key"); // CLAVE 
-        JsonValue value = jsonObject.get("value");
+        JsonValue valor = jsonObject.get("value");
         
         logger.info("HE RECIBIDO TU NOMBRE");
  		logger.info(nombre);
         
- 		 logger.info("HE RECIBIDO TUS DATOS");
-  		logger.info(key+":"+value);
+ 		logger.info("HE RECIBIDO TUS DATOS");
+  		logger.info(key+":"+valor+" = "+valor.getClass().getName());
          
         List<String> pares = new ArrayList<String>();
-        pares.add(key+":"+value);
+        pares.add(key+":"+valor);
  		// crear la base de datos
  		boolean created = impl.createDatabase(nombre, userId, pares);
  		// Construye la URL de la base de datos

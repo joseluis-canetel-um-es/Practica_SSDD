@@ -54,7 +54,7 @@ def login():
                 login_user(user, remember=form.remember_me.data)
                 return redirect(url_for('profile'))
             else:
-                error = 'Email o contraseña incorrectos' + str(response.status_code)
+                error = 'Email o contraseña incorrectos'
 
         return render_template('login.html', form=form,  error=error)
     
@@ -104,20 +104,28 @@ def createDatabases():
         key = form.key.data
         value = form.value.data
 
-        #clave_valor = key+':'+value
-        #pares = [clave_valor]
-
+        valor_convertido = None
+        try:
+            # Intentar convertir a entero
+            valor_convertido = int(value)
+        except ValueError:
+            try:
+                # Intentar convertir a número en coma flotante
+                valor_convertido = float(value)
+            except ValueError:
+                # Valor no numérico, se considera una cadena de caracteres
+                valor_convertido = str(value)
 
         cabecera = {"Content-Type" : "application/json"}
         # llamar a backend para peticion de almacenar
         # password modificado para tomar el hash
-        datos_database = {"name" : name, "key" : key, "value":value}
+        datos_database = {"name" : name, "key" : key, "value":valor_convertido}
         # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
             error =  "Database registrada correctamente"
         elif response.status_code == 400:
-           error = 'No se ha podido crear la base de datos'
+            error = 'No se ha podido crear la base de datos'
         else:
             error = 'Error no controlado'
     return render_template('createDatabases.html', form=form, error=error)
