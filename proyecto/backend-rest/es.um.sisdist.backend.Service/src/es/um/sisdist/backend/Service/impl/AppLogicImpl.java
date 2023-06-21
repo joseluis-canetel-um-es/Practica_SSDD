@@ -140,17 +140,21 @@ public class AppLogicImpl
     
     // dado un id de usuario retorna las bases de datos relacioandos
     public ArrayList<DataBase> getDatabasesByUserId(String userId) {
+    	logger.info("HE ENTRADO EN APPLOGIC");
         try {
            ArrayList<DataBase> databases = daodb.getDatabases(userId);
+           logger.info("MIS DATABSES SON");
+           logger.info(databases.toString());
            if(!databases.isEmpty()) {
         		logger.info("en appLogicImpl NO ES NULL LA LISTA DE DB");
-
+           }else {
+        	   logger.info("en appLogicImpl ES NULL LA LISTA DE DB");
            }
            return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario
         }
-
+        logger.info("TE VOY A DEVOLCER UN PEDAZO DE NULL");
         return null;
     }
     

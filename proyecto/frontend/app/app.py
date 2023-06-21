@@ -145,24 +145,22 @@ def createDatabases():
 def viewDatabases():
     # funcion para mostrar todas las bases de datos de un usuario (muestra los nombres o links)
     id = current_user.id
+    logging.info("MI ID ES "+id)
     try:
         response = requests.get('http://backend-rest:8080/Service/u/'+id+'/dbinfo')
     except:
         error = 'No se ha podido hacer la conexion'
     
-
     if response.status_code == 200:
-
         databases = response.json()
         return render_template('viewDatabases.html', databases = databases)
 
     elif response.status_code == 204:
         databases = []
         return render_template('viewDatabases.html', databases = databases)
-    
     else:
         error = 'No se ha podido obtener las bases de datos'
-        return render_template('base.html', error = error)
+    return render_template('viewDatabases.html', error = error)    
 
 
 

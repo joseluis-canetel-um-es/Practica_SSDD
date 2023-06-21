@@ -208,8 +208,11 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 
 
 	        FindIterable<DataBase> queryResult = mongoCollection.find(eq("idUser", userId));
-	        ArrayList<DataBase> result = new ArrayList<>(queryResult.into(new ArrayList<>()));
-
+	        //ArrayList<DataBase> result = new ArrayList<>(queryResult.into(new ArrayList<>()));
+	        ArrayList<DataBase> result = new ArrayList<>();
+	        for (DataBase database : queryResult) {
+	            result.add(database);
+	        }
 	        return result;
 	    } catch (Exception e) {
 	        // Manejar la excepción según sea necesario
