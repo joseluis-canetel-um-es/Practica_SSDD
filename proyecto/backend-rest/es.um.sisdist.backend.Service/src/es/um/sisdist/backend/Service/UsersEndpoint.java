@@ -51,7 +51,6 @@ public class UsersEndpoint
         return UserDTOUtils.toDTO(impl.getUserByEmail(username).orElse(null));
     }
     
-    /**
     // obtener las bases de datos de un usuario dado su ID
     @GET
     @Path("/{id}/db")
@@ -70,7 +69,6 @@ public class UsersEndpoint
 
     	}
     }
-    */
     
  	// metodo para que el usuario pueda crear bases de datos
  	@POST

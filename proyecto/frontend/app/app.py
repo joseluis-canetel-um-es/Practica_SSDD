@@ -133,7 +133,7 @@ def createDatabases():
         # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
-            error =  "Database registrada correctamente"
+            error =  "Database registrada correctamente : "+str(response.headers.get('Location'))
         elif response.status_code == 400:
             error = 'No se ha podido crear la base de datos'
         else:

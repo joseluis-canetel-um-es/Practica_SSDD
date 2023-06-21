@@ -8,24 +8,21 @@ import es.um.sisdist.backend.dao.models.DataBase;
 public class DatabaseDTOUtils {
 	
 	// get DataBase Object
-	/*
 	public static DataBase fromDTO(DatabaseDTO dto) {
 		DataBase database = new DataBase(dto.getName());
 		database.setId(dto.getId());
-		database.setIdUser(dto.getUsuario());
-		database.setPares(dto.getPares());
+		database.setIdUser(dto.getIdUser());
+		database.setHashMap(dto.getHashMap());
 		return database;
 	}
 
 	// get DatabaseDTO
 	public static DatabaseDTO toDTO(DataBase database) {
-		DatabaseDTO dto = new DatabaseDTO();
+		DatabaseDTO dto = new DatabaseDTO(database.getName());
 		dto.setId(database.getId());
-		dto.setUsuario(database.getIdUser());
-		dto.setName(database.getName());
-		dto.setPares(database.getPares());
+		dto.setIdUser(database.getIdUser());
+		dto.setHashMap(database.getHashMap());
 		return dto;
 	}
-*/
 
 }

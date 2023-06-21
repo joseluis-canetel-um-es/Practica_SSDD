@@ -137,21 +137,20 @@ public class AppLogicImpl
     	return Optional.of(daodb.getDatabase(db));
     	//return null;
     }
-    /**
     
     // dado un id de usuario retorna las bases de datos relacioandos
     public ArrayList<DataBase> getDatabasesByUserId(String userId) {
         try {
-            //MongoCollection<DataBase> mongoCollection = collection.get(); // Obtener la colección de la base de datos
-           // List<DataBase> result = mongoCollection.find(eq("idUser", userId)).into(new ArrayList<>());
-        	ArrayList<DataBase> result = daodb.getDatabases(userId);
-            return result;
+           ArrayList<DataBase> databases = daodb.getDatabases(userId);
+           return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario
         }
 
         return null;
     }
+    
+    /**
     
     // dado un id de db y una clave, elimina el par <k,v> de la db
     public boolean deleteKeyValue(String userId, String dbId, String key) {
