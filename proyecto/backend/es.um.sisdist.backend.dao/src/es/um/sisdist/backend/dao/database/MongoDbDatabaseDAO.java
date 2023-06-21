@@ -23,6 +23,7 @@ import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -182,35 +183,36 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	}
 */
 	
-	// inserta una base de datos
 	@Override
-	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos) {
+	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos, String url) {
 	    try {
 	        DataBase database = new DataBase(db); // Crear objeto DataBase con el nombre db
 	        database.setId(UUID.randomUUID().toString()); // Generar un ID único para la base de datos
 	        database.setIdUser(idUser); // Asignar el ID del usuario asociado
 	        database.setHashMap(datos); // Asignar el map de pares clave-valor
+	        database.setUrl(url); // Asignar la URL
+
 	        collection.get().insertOne(database);
 	        return true;
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	        e.printStackTrace();
 	        return false;
 	    }
 	}
 
-	// obtener todas las db que esten relacionados con un usuario
+
 	@Override
 	public ArrayList<DataBase> getDatabases(String userId) {
-		try {
+	    try {
 	        MongoCollection<DataBase> mongoCollection = collection.get(); // Obtener la colección de la base de datos
-	        ArrayList<DataBase> result = new ArrayList<DataBase>();
 
-	        mongoCollection.find(eq("idUser", userId)).forEach(db -> {
-	            result.add(db);
-	        });
+
+	        FindIterable<DataBase> queryResult = mongoCollection.find(eq("idUser", userId));
+	        ArrayList<DataBase> result = new ArrayList<>(queryResult.into(new ArrayList<>()));
 
 	        return result;
 	    } catch (Exception e) {
+	        // Manejar la excepción según sea necesario
 	    }
 
 	    return null;

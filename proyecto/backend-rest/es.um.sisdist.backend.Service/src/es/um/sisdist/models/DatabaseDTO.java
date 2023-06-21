@@ -2,13 +2,13 @@ package es.um.sisdist.models;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
-import java.util.List;
 
 @XmlRootElement
 public class DatabaseDTO {
 	private String id;
 	private String name;
 	private String idUser; // relacionar el id de usuario con la db
+	private String url;
 	private HashMap<String, Object> hashMap;
 
 
@@ -16,6 +16,20 @@ public class DatabaseDTO {
 		this.name = name;
 		this.hashMap = new HashMap<String, Object>();
 	}
+
+	
+	
+	public String getUrl() {
+		return url;
+	}
+
+
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
 
 	public String getId() {
 		return id;

@@ -53,11 +53,15 @@ public class UsersEndpoint
     
     // obtener las bases de datos de un usuario dado su ID
     @GET
-    @Path("/{id}/db")
+    @Path("/{id}/dbinfo")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDatabasesUser(@PathParam ("id") String userID) {
+ 		logger.info("HE RECIBIDO TU SOLICITUD DE OBTENER BASES DE DATOS");
+
     	ArrayList<DataBase> databases = impl.getDatabasesByUserId(userID);
     	if(databases != null) {
+     		logger.info("HE ENTRADO EN DB NO NULL");
+
     		ArrayList<DatabaseDTO> databasesDTO = new ArrayList<DatabaseDTO>();
     		for( DataBase db : databases ) {
     			databasesDTO.add( DatabaseDTOUtils.toDTO(db) );
@@ -120,9 +124,9 @@ public class UsersEndpoint
   		logger.info("HE CREADO TU HASHMAP");
   		logger.info(datos.toString());
  		// crear la base de datos
- 		boolean created = impl.createDatabase(nombre, userId, datos);
- 		// Construye la URL de la base de datos
  		String databaseUrl = "/u/" + userId + "/db/" + nombre;
+ 		boolean created = impl.createDatabase(nombre, userId, datos, databaseUrl);
+ 		// Construye la URL de la base de datos
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
  		if(created) {
  			return Response.status(Response.Status.CREATED).header("Location", databaseUrl).build();
@@ -131,15 +135,16 @@ public class UsersEndpoint
  		}
  	}
  	
- 	
- 	// metodo consulta de bases de datos
- 	@GET
-     @Path("/{id}/db/{name}")
-     public Response getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
-         impl.getDatabase(databaseName);
+	// metodo consulta de bases de datos
+	@GET
+	@Path("/{id}/db/{name}")
+	public DatabaseDTO getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
+		// Optional<DataBase> db = impl.getDatabase(databaseName);
 
-         return Response.ok().build();
-     }
+		// return Response.ok().build();
+		return DatabaseDTOUtils.toDTO(impl.getDatabase(databaseName).orElse(null));
+
+	}
  	
  	/**
  	@DELETE

@@ -1,0 +1,21 @@
+<!-- databaseInfo.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Database Information</h1>
+
+    {% if database %}
+        <h2>Name: {{ database['name'] }}</h2>
+        <h2>URL: {{ database['url'] }}</h2>
+
+        <h2>Hash Map:</h2>
+        <ul>
+            {% for key, value in database['hashMap'].items() %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se ha recibido la base de datos.</p>
+    {% endif %}
+{% endblock %}
+

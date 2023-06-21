@@ -2,7 +2,18 @@
 
 {% block content %}
     <h1 class="title">
-        Welcome to view databases
+        Welcome, {{ current_user.name }}!!
     </h1>
+
+    <h2>Your Databases:</h2>
+    <ul>
+        {% for database in databases %}
+        <li>
+            {{ database.name }} - <a href="{{ url_for('database_info', database_name=database.name) }}">URL</a>
+        </li>
+        {% else %}
+            <li>No databases found.</li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

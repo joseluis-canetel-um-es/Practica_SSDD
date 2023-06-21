@@ -12,7 +12,7 @@ pares clave/valor a la base de datos, así como obtener listados de
 valores y lanzar procesamientos map-reduce *
 */
 public interface IDatabaseDAO {
-	 public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos);
+	 public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos, String url);
 	 public boolean deleteDatabase(String idUser, String databaseName);
 	 public DataBase getDatabase(String databaseId);
 	// public void addClaveValor(String db, String clave, String valor);

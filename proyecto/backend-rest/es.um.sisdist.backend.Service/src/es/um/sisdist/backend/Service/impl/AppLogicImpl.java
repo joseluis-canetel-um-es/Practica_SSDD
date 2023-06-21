@@ -122,8 +122,8 @@ public class AppLogicImpl
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
-    public boolean createDatabase(String name, String idUser, HashMap<String, Object> datos) {
-    	return daodb.insertDatabase(name, idUser, datos);
+    public boolean createDatabase(String name, String idUser, HashMap<String, Object> datos, String url) {
+    	return daodb.insertDatabase(name, idUser, datos, url);
     }
     
   /**
@@ -132,7 +132,7 @@ public class AppLogicImpl
     }
     */
     
-    // devuelve la database dado su id
+    // devuelve la database dado su nombre
     public Optional<DataBase> getDatabase(String db) {
     	return Optional.of(daodb.getDatabase(db));
     	//return null;
@@ -142,6 +142,10 @@ public class AppLogicImpl
     public ArrayList<DataBase> getDatabasesByUserId(String userId) {
         try {
            ArrayList<DataBase> databases = daodb.getDatabases(userId);
+           if(!databases.isEmpty()) {
+        		logger.info("en appLogicImpl NO ES NULL LA LISTA DE DB");
+
+           }
            return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario

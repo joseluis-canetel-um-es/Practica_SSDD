@@ -56,7 +56,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	*/
 
 	@Override
-	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos) {
+	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos, String url) {
 		// TODO Auto-generated method stub
 		return false;
 	}

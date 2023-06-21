@@ -1,8 +1,5 @@
 package es.um.sisdist.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import es.um.sisdist.backend.dao.models.DataBase;
 
 public class DatabaseDTOUtils {
@@ -13,6 +10,7 @@ public class DatabaseDTOUtils {
 		database.setId(dto.getId());
 		database.setIdUser(dto.getIdUser());
 		database.setHashMap(dto.getHashMap());
+		database.setUrl(dto.getUrl());
 		return database;
 	}
 
@@ -22,6 +20,7 @@ public class DatabaseDTOUtils {
 		dto.setId(database.getId());
 		dto.setIdUser(database.getIdUser());
 		dto.setHashMap(database.getHashMap());
+		dto.setUrl(database.getUrl());
 		return dto;
 	}
 
