@@ -1,7 +1,9 @@
 package es.um.sisdist.backend.Service;
 
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -13,8 +15,10 @@ import es.um.sisdist.models.DatabaseDTOUtils;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
 import jakarta.json.Json;
+import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -72,32 +76,53 @@ public class UsersEndpoint
  	@POST
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
- 	public Response createDatabase(@PathParam("id") String userId, JsonObject jsonObject) {
- 		// obtener los datos iniciales de databaseRequest.getD()
- 		
+ 	public Response createDatabase(@PathParam("id") String userId, JsonObject jsonObject) { 		
  		logger.info("HE RECIBIDO TU SOLICITUD DE CREAR BASE");
- 		
- 	// Crear un JsonReader utilizando una cadena JSON
-      //  JsonReader jsonReader = Json.createReader(new StringReader(json));
-
-        // Obtener el JsonObject raíz
-//        JsonObject jsonObject = jsonReader.readObject();
-
         // Obtener los valores de las propiedades del JsonObject
         String nombre = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
-        String key = jsonObject.getString("key"); // CLAVE 
-        JsonValue valor = jsonObject.get("value");
+        JsonValue key_value = jsonObject.get("key");
+        Object key;
+        if (key_value instanceof JsonNumber) {
+        	JsonNumber number = (JsonNumber) key_value;
+            if (number.isIntegral()) {
+            	key = number.intValue();
+            } else {
+            	BigDecimal decimalValue = number.bigDecimalValue();
+            	key = decimalValue.floatValue();
+            }
+        } else {
+        	key = ((JsonString) key_value).getString();
+        }
+        JsonValue valor_value = jsonObject.get("value");
+        Object valor;
+        // Verificar el tipo del valor
+        if (valor_value instanceof JsonNumber) {
+        	JsonNumber number = (JsonNumber) valor_value;
+            if (number.isIntegral()) {
+            	valor = number.intValue();
+            } else {
+            	BigDecimal decimalValue = number.bigDecimalValue();
+            	valor = decimalValue.floatValue();
+            }
+        } else {
+        	valor = ((JsonString) valor_value).getString();
+        }
         
         logger.info("HE RECIBIDO TU NOMBRE");
  		logger.info(nombre);
-        
- 		logger.info("HE RECIBIDO TUS DATOS");
-  		logger.info(key+":"+valor+" = "+valor.getClass().getName());
+ 		
+ 		logger.info("HE RECIBIDO TU KEY");
+ 		logger.info(key.toString()+ " DE TIPO "+ key.getClass().getName());
+ 		
+ 		logger.info("HE RECIBIDO TU CLAVE");
+ 		logger.info(valor.toString()+ " DE TIPO "+ valor.getClass().getName());       
          
-        List<String> pares = new ArrayList<String>();
-        pares.add(key+":"+valor);
+  		HashMap<String, Object> datos = new HashMap<String, Object>();
+  		datos.put(key.toString(), valor);
+  		logger.info("HE CREADO TU HASHMAP");
+  		logger.info(datos.toString());
  		// crear la base de datos
- 		boolean created = impl.createDatabase(nombre, userId, pares);
+ 		boolean created = impl.createDatabase(nombre, userId, datos);
  		// Construye la URL de la base de datos
  		String databaseUrl = "/u/" + userId + "/db/" + nombre;
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location

@@ -11,20 +11,12 @@ public class DataBase {
     private String id;
 	private String name;
 	private String idUser; // relacionar el id de usuario con la db
-	//private ArrayList<Value> table; // valores que almacena la db
-	
-	/**
-	 * Las claves y los valores pueden ser de tres tipos:
-		Números enteros, si no tienen decimales
-		Números en coma flotante, si tienen decimales
-		Cadenas arbitrarias de caracteres
+	private HashMap<String, Object> hashMap;
 
-	 */
-	//private HashMap<String, String> pares; // pares clave valor
-	private List<String> pares;
 
 	public DataBase(String name) {
 		this.name = name;
+		this.hashMap = new HashMap<String, Object>();
 	}
 
 	public String getId() {
@@ -42,34 +34,23 @@ public class DataBase {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	public List<String> getPares() {
-		return pares;
+
+	public HashMap<String, Object> getHashMap() {
+		return hashMap;
 	}
 
-	public void setPares(List<String> pares) {
-		this.pares = pares;
-	}
-
-/**
-	public HashMap<String, String> getPares() {
-		return pares;
-	}
-
-	public void setPares(HashMap<String, String> pares) {
-		this.pares = pares;
+	public void setHashMap(HashMap<String, Object> datos) {
+		hashMap.putAll(datos);
 	}
 	
-	// Añadir un par clave valor a la base de datos
-	public void addPar(String key, String value) {
-		this.pares.put(key, value);
+	public void addPar(String key, Object value) {
+		this.hashMap.put(key, value);
 	}
-	// eliminar un par clave valor de la base de datos
-	public void deletePar(String key) {
-		this.pares.remove(key);
+	
+	public void deletePar(Object key) {
+		this.hashMap.remove(key);
 	}
-*/
+
 	public String getIdUser() {
 		return idUser;
 	}

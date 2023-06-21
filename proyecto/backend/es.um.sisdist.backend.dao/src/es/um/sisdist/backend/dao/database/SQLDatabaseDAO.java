@@ -19,7 +19,7 @@ import es.um.sisdist.backend.dao.utils.Lazy;
 
 public class SQLDatabaseDAO implements IDatabaseDAO {
 	Supplier<Connection> conn;
-
+	/*
 	public SQLDatabaseDAO() {
 		conn = Lazy.lazily(() -> {
 			try {
@@ -53,6 +53,45 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	    }
 	    return false;
 	}
+	*/
+
+	@Override
+	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteDatabase(String idUser, String databaseName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public DataBase getDatabase(String databaseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean deleteClaveValor(String dbId, String clave) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void getValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<DataBase> getDatabases(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 /**
 	@Override
@@ -98,7 +137,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	}
 	
 	*/
-	
+	/*
 	@Override
 	public DataBase getDatabase(String databaseId) {
 	    try {
@@ -133,6 +172,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	    // Si no se encontró ninguna base de datos, retornar null
 	    return null;
 	}
+	*/
 
 /**
 	@Override
@@ -176,7 +216,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 	}
 	*/
-
+	/*
 	// eliminar un par clave valor
 	@Override
 	public boolean deleteClaveValor(String db, String clave) {
@@ -199,7 +239,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 					/**
 					String key = entry.getKey();
 					String value = entry.getValue();
-					sb.append(key).append(":").append(value).append(",");*/
+					sb.append(key).append(":").append(value).append(",");
 					String[] parts = keyValue.split(":");
 
 					// Obtener la clave y el valor y si coincide key, se elimina
@@ -239,7 +279,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 		return false;
 
 	}
-
+	
 	@Override
 	public void getValues() {
 		// Obtiene lista de todos los pares Clave,Valor de la base de datos
@@ -247,6 +287,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 		// TODO Auto-generated method stub
 
 	}
+	*/
 /**
 	@Override
 	public boolean insertDatabase(String db, String idUser) {
@@ -268,9 +309,9 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 		}
 		return false;
 	}
-*/
+
 	@Override
-	public boolean insertDatabase(String db, String idUser, List<String> pairs) {
+	public boolean insertDatabase(String db, String idUser, HashMap<Object, Object> hashMap) {
 	    PreparedStatement stm;
 	    try {
 	        stm = conn.get().prepareStatement("INSERT INTO databases (id, name, idUser, pares) VALUES (?, ?, ?, ?)");
@@ -287,6 +328,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	    }
 	    return false;
 	}
+	*/
 
 /**
 	@Override
@@ -329,6 +371,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 		    return databases;
 	}*/
+	/*
 	@Override
 	public ArrayList<DataBase> getDatabases(String userId) {
 	    ArrayList<DataBase> databases = new ArrayList<>();
@@ -363,6 +406,6 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 
 	    return databases;
 	}
-
+	 */
 
 }

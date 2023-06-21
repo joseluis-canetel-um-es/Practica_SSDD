@@ -4,6 +4,7 @@
 package es.um.sisdist.backend.Service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -121,8 +122,8 @@ public class AppLogicImpl
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
-    public boolean createDatabase(String name, String idUser, List<String> pares) {
-    	return daodb.insertDatabase(name, idUser, pares);
+    public boolean createDatabase(String name, String idUser, HashMap<String, Object> datos) {
+    	return daodb.insertDatabase(name, idUser, datos);
     }
     
   /**

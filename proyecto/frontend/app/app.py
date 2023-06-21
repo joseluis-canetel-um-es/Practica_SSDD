@@ -103,7 +103,17 @@ def createDatabases():
         name = form.name.data
         key = form.key.data
         value = form.value.data
-
+        key_convertido = None
+        try:
+            # Intentar convertir a entero
+            key_convertido = int(key)
+        except ValueError:
+            try:
+                # Intentar convertir a número en coma flotante
+                key_convertido = float(key)
+            except ValueError:
+                # Valor no numérico, se considera una cadena de caracteres
+                key_convertido = str(key)
         valor_convertido = None
         try:
             # Intentar convertir a entero
@@ -119,7 +129,7 @@ def createDatabases():
         cabecera = {"Content-Type" : "application/json"}
         # llamar a backend para peticion de almacenar
         # password modificado para tomar el hash
-        datos_database = {"name" : name, "key" : key, "value":valor_convertido}
+        datos_database = {"name" : name, "key" : key_convertido, "value":valor_convertido}
         # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:

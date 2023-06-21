@@ -8,6 +8,7 @@ import es.um.sisdist.backend.dao.models.DataBase;
 public class DatabaseDTOUtils {
 	
 	// get DataBase Object
+	/*
 	public static DataBase fromDTO(DatabaseDTO dto) {
 		DataBase database = new DataBase(dto.getName());
 		database.setId(dto.getId());
@@ -25,6 +26,6 @@ public class DatabaseDTOUtils {
 		dto.setPares(database.getPares());
 		return dto;
 	}
-
+*/
 
 }

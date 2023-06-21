@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
+
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -30,6 +32,7 @@ import com.mongodb.client.model.Updates;
 
 import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.utils.Lazy;
+
 
 public class MongoDbDatabaseDAO implements IDatabaseDAO {
 
@@ -181,16 +184,16 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	
 	// inserta una base de datos
 	@Override
-	public boolean insertDatabase(String db, String idUser, List<String> pairs) {
+	public boolean insertDatabase(String db, String idUser, HashMap<String, Object> datos) {
 	    try {
 	        DataBase database = new DataBase(db); // Crear objeto DataBase con el nombre db
 	        database.setId(UUID.randomUUID().toString()); // Generar un ID único para la base de datos
 	        database.setIdUser(idUser); // Asignar el ID del usuario asociado
-	        database.setPares(pairs); // Asignar la lista de pares clave-valor
+	        database.setHashMap(datos); // Asignar el map de pares clave-valor
 	        collection.get().insertOne(database);
-
 	        return true;
 	    } catch (Exception e) {
+	    	e.printStackTrace();
 	        return false;
 	    }
 	}
