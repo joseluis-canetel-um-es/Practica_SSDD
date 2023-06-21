@@ -30,6 +30,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.InsertOneResult;
 
 import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.utils.Lazy;
@@ -192,8 +193,11 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	        database.setHashMap(datos); // Asignar el map de pares clave-valor
 	        database.setUrl(url); // Asignar la URL
 
-	        collection.get().insertOne(database);
-	        return true;
+	        InsertOneResult result = collection.get().insertOne(database);
+
+	        return result.wasAcknowledged();
+	        //collection.get().insertOne(database);
+	        //return true;
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return false;
