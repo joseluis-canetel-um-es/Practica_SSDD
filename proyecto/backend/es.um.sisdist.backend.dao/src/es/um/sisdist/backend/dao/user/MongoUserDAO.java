@@ -76,10 +76,7 @@ public class MongoUserDAO implements IUserDAO
         Optional<User> user = Optional.ofNullable(collection.get().find(eq("email", email)).first());
         return user;
     }
-    
-// inserta usuario en BD
-    
-    // FALTA MODIFICAR USUARIO PASSWORD
+        
     @Override
    public boolean insertUser(String email, String name, String password) {
         try {
@@ -91,8 +88,6 @@ public class MongoUserDAO implements IUserDAO
         }
     }
 
-    /** modificado por kholoud*/
-    // elimina usuario de BD dado un ID
     @Override
     public boolean deleteUser(String id) {
         try {
@@ -103,8 +98,6 @@ public class MongoUserDAO implements IUserDAO
         }
     }
 
-    /** modificado por kholoud*/
-    // actualiza datos del usuario en BD 
     @Override
     public boolean updateUser(User user) {
         try {
@@ -124,18 +117,13 @@ public class MongoUserDAO implements IUserDAO
         }
     }
 
-    /**modificado por kholoud*/
 	@Override
 	public void addVisits(String email) {
-		// TODO Auto-generated method stub
-		// obtener usuario y modificar su numero de visitas en la base de datos
 		try {
 	        Document filter = new Document("email", email);
 	        Document update = new Document("$inc", new Document("visits", 1));
 	        collection.get().updateOne(filter, update);
-	        //return result.getModifiedCount() > 0;
 	    } catch (Exception e) {
-	        //return false;
 	    }
 	}
 
@@ -148,22 +136,9 @@ public class MongoUserDAO implements IUserDAO
 	        database.setPares(pares); // Asignar la lista de pares clave-valor
 	        LinkedList<DataBase> databases = collection.get().find(eq("id", idUser)).first().getDatabases();
 	        databases.add(database);
-	        logger.info("ESTA ES LA DATABASE QUE INSERTAS");
-	        logger.info(database.toString());
-            Document filter = new Document("id", idUser);
+	        Document filter = new Document("id", idUser);
             Document update = new Document("$set", new Document("databases", databases));
-            com.mongodb.client.result.UpdateResult result = collection.get().updateOne(filter, update);
-            
-            /*
-            Optional<User> user = Optional.ofNullable(collection.get().find(eq("id", idUser)).first());
-            if(user.isPresent()) {
-            	logger.info("ESTE ES EL USUARIO CON LA NUEVA BBDD");
-    	        logger.info(user.toString());
-            }else {
-            	logger.info("AQUI NO HAY USER");
-            }
-            */
-            
+            com.mongodb.client.result.UpdateResult result = collection.get().updateOne(filter, update);  
             return result.getModifiedCount() > 0;
         } catch (Exception e) {
             return false;
@@ -209,7 +184,6 @@ public class MongoUserDAO implements IUserDAO
 			Optional<LinkedList<DataBase>> databases = Optional.ofNullable(collection.get().find(eq("id", idUser)).first().getDatabases());
 			return databases;
 		}catch (Exception e) {
-			logger.info("ERROR SEÑOR AGENTE");
             return null;
         }
 	}

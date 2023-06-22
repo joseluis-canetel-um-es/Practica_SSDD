@@ -74,7 +74,6 @@ public class SQLUserDAO implements IUserDAO
     @Override
     public Optional<User> getUserByEmail(String email)
     {
-    	logger.info("SQLUSERDAO: Entra en getUserByEmail");
         PreparedStatement stm;
         try
         {
@@ -82,7 +81,6 @@ public class SQLUserDAO implements IUserDAO
             stm.setString(1, email);
             ResultSet result = stm.executeQuery();
             if (result.next()) {
-            	logger.info("SQLUSERDAO: entra en result.next()");
                 return createUser(result);
 
             }

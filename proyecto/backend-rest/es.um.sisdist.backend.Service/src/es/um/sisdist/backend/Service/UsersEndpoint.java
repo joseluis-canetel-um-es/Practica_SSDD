@@ -99,24 +99,6 @@ public class UsersEndpoint
  		}
  	}
  	
- 	/**
- 	@DELETE
- 	@Path("/{dbName}")
- 	public Response deleteDatabase(@PathParam("id") String userId, @PathParam("dbName") String databaseName) {
- 	    // Verificar si la base de datos existe y pertenece al usuario
- 	    //if (impl.isDatabaseOwnedByUser(databaseName, userId)) {
- 	        // Eliminar la base de datos
- 	        boolean deleted = impl.deleteDatabase(userId, databaseName);
-
- 	        if (deleted) {
- 	            return Response.ok().build(); // Respuesta HTTP 200 OK si se eliminó correctamente
- 	        } else {
- 	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server Error si hubo un error al eliminar
- 	        }
- 	    
- 	}
- 	*/
- 	
  // Añadir un par clave/valor de la base de datos
    	@POST
    	@Path("/{id}/db/{dbid}/a")

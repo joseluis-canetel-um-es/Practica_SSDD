@@ -5,6 +5,7 @@ package es.um.sisdist.backend.Service.impl;
 
 import java.util.ArrayList;
 
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,6 @@ import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
-import es.um.sisdist.backend.dao.database.IDatabaseDAO;
 import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
@@ -69,7 +69,6 @@ public class AppLogicImpl
 
     public Optional<User> getUserByEmail(String email)
     {
-    	logger.info("AppLogicImpl: getUserByEmail");
         Optional<User> u = dao.getUserByEmail(email);
         return u;
     }
@@ -114,9 +113,6 @@ public class AppLogicImpl
     	return dao.insertUser(email, name, password);    	
     }
     
-    /************************************************************************/
-    /**DATABASES
-     */
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
@@ -124,29 +120,20 @@ public class AppLogicImpl
     	return dao.insertDatabase(idUser, databaseName, url, pares);
     }
     
-  /**
-    public boolean deleteDatabase(String idUser, String name) {
-    	return daodb.deleteDatabase(idUser,name);
-    }
-    */
-    
     // devuelve la database dado su nombre
     public DataBase getDatabase(String idUser, String databaseName) {    	
-    	logger.info("AppLogicImpl: getDatabase");
     	DataBase d = dao.getDatabase(idUser, databaseName);
         return d;
     }
     
     // dado un id de usuario retorna las bases de datos relacioandos
     public Optional<LinkedList<DataBase>> getDatabasesByUserId(String userId) {
-    	logger.info("HE ENTRADO EN APPLOGIC Y VOY A OBTENER DBS");
         try {
         	Optional<LinkedList<DataBase>> databases = dao.getDatabases(userId);
         	return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario
         }
-        logger.info("TE VOY A DEVOLVER UN PEDAZO DE NULL");
         return null;
     }
     
