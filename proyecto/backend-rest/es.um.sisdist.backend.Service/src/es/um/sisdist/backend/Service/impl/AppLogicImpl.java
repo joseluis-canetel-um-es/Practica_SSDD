@@ -4,7 +4,9 @@
 package es.um.sisdist.backend.Service.impl;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -29,8 +31,6 @@ public class AppLogicImpl
 {
     IDAOFactory daoFactory;
     IUserDAO dao;
-    IDatabaseDAO daodb;
-
     private static final Logger logger = Logger.getLogger(AppLogicImpl.class.getName());
 
     private final ManagedChannel channel;
@@ -46,11 +46,9 @@ public class AppLogicImpl
         
         if (backend.isPresent() && backend.get().equals("mongo")) {
             dao = daoFactory.createMongoUserDAO();
-            daodb = daoFactory.createMongoDatabaseDAO();
         }
         else {
             dao = daoFactory.createSQLUserDAO();
-            daodb = daoFactory.createSQLDatabaseDAO();
         }
         var grpcServerName = Optional.ofNullable(System.getenv("GRPC_SERVER"));
         var grpcServerPort = Optional.ofNullable(System.getenv("GRPC_SERVER_PORT"));
@@ -122,8 +120,8 @@ public class AppLogicImpl
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
-    public boolean createDatabase(String name, String idUser, HashMap<String, Object> datos, String url) {
-    	return daodb.insertDatabase(name, idUser, datos, url);
+    public boolean createDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos) {
+    	return dao.insertDatabase(idUser, databaseName, url, datos);
     }
     
   /**
@@ -133,24 +131,20 @@ public class AppLogicImpl
     */
     
     // devuelve la database dado su nombre
-    public Optional<DataBase> getDatabase(String userID, String db) {    	
+    public DataBase getDatabase(String idUser, String databaseName) {    	
     	logger.info("AppLogicImpl: getDatabase");
-    	Optional<DataBase> d = daodb.getDatabase(userID, db);
+    	DataBase d = dao.getDatabase(idUser, databaseName);
         return d;
     }
     
     // dado un id de usuario retorna las bases de datos relacioandos
-    public ArrayList<DataBase> getDatabasesByUserId(String userId) {
+    public Optional<LinkedList<DataBase>> getDatabasesByUserId(String userId) {
     	logger.info("HE ENTRADO EN APPLOGIC");
         try {
-           ArrayList<DataBase> databases = daodb.getDatabases(userId);
+        	
+           Optional<LinkedList<DataBase>> databases = dao.getDatabases(userId);
            logger.info("MIS DATABSES SON");
            logger.info(databases.toString());
-           if(!databases.isEmpty()) {
-        		logger.info("en appLogicImpl NO ES NULL LA LISTA DE DB");
-           }else {
-        	   logger.info("en appLogicImpl ES NULL LA LISTA DE DB");
-           }
            return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario

@@ -10,7 +10,6 @@ import java.util.List;
 public class DataBase {
     private String id;
 	private String name;
-	private String idUser; // relacionar el id de usuario con la db
 	private String url;
 	private HashMap<String, Object> hashMap;
 
@@ -65,14 +64,4 @@ public class DataBase {
 	public void deletePar(Object key) {
 		this.hashMap.remove(key);
 	}
-
-	public String getIdUser() {
-		return idUser;
-	}
-
-	public void setIdUser(String idUser) {
-		this.idUser = idUser;
-	}
-	
-	
 }

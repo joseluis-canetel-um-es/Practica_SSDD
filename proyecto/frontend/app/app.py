@@ -133,14 +133,12 @@ def createDatabases():
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
             error =  "Database registrada correctamente : "+str(response.headers.get('Location'))
-            return redirect(url_for('databaseInfo', databasename=name))
         elif response.status_code == 400:
             error = 'No se ha podido crear la base de datos'
         else:
             error = 'Error no controlado'
     return render_template('createDatabases.html', form=form, error=error)
 
-"""
 @app.route('/viewDatabases', methods=['GET'])
 @login_required
 def viewDatabases():
@@ -154,6 +152,9 @@ def viewDatabases():
     
     if response.status_code == 200:
         databases = response.json()
+        logging.basicConfig(level=logging.DEBUG)
+        logging.info('HE OBTENIDO')
+        logging.info(databases)
         return render_template('viewDatabases.html', databases = databases)
 
     elif response.status_code == 204:
@@ -162,26 +163,6 @@ def viewDatabases():
     else:
         error = 'No se ha podido obtener las bases de datos'
     return render_template('viewDatabases.html', error = error)    
-"""
-
-@app.route('/viewDatabases', methods=['GET'])
-@login_required
-def viewDatabases():
-    # funcion para mostrar todas las bases de datos de un usuario (muestra los nombres o links)
-    id = current_user.id
-    try:
-        response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/')
-    except:
-        error = 'No se ha podido hacer la conexion'
-    
-    if response.status_code == 200:
-        database = response.json()
-        return render_template('databaseInfo.html', database = database)
-
-    else:
-        error = 'No se ha recibido la base de datos'
-    return render_template('viewDatabases.html', error = error)    
-
 
 @app.route('/databaseInfo', methods=['GET'])
 @login_required

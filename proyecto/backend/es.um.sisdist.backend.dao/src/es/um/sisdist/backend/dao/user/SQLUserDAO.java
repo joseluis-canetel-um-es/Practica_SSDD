@@ -8,11 +8,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.utils.Lazy;
@@ -181,5 +184,35 @@ public class SQLUserDAO implements IUserDAO
 		    }
 		
 
+	}
+
+	@Override
+	public boolean insertDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteDatabase(String idUser, String databaseName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public DataBase getDatabase(String idUser, String databaseName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean deleteClaveValor(String idUser, String databaseName, String clave) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Optional<LinkedList<DataBase>> getDatabases(String idUser) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 }

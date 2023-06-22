@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.models.User;
+import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.models.DatabaseDTO;
 import es.um.sisdist.models.DatabaseDTOUtils;
 import es.um.sisdist.models.UserDTO;
@@ -52,6 +54,7 @@ public class UsersEndpoint
         return UserDTOUtils.toDTO(impl.getUserByEmail(username).orElse(null));
     }
     
+    
     // obtener las bases de datos de un usuario dado su ID
     @GET
     @Path("/{id}/dbinfo")
@@ -59,30 +62,30 @@ public class UsersEndpoint
     public Response getDatabasesUser(@PathParam ("id") String userID) {
  		logger.info("HE RECIBIDO TU SOLICITUD DE OBTENER BASES DE DATOS");
 
-    	ArrayList<DataBase> databases = impl.getDatabasesByUserId(userID);
-    	if(databases != null) {
-     		logger.info("HE ENTRADO EN DB NO NULL");
+ 		Optional<LinkedList<DataBase>> databases = impl.getDatabasesByUserId(userID);
+ 		if (databases.isPresent())
+        {
+ 			logger.info("HE ENTRADO EN DB NO NULL");
 
-    		ArrayList<DatabaseDTO> databasesDTO = new ArrayList<DatabaseDTO>();
-    		for( DataBase db : databases ) {
+ 			LinkedList<DatabaseDTO> databasesDTO = new LinkedList<DatabaseDTO>();
+    		for( DataBase db : databases.get()) {
     			databasesDTO.add( DatabaseDTOUtils.toDTO(db) );
     		}		
-    		return Response.ok(databasesDTO).build();  
-    	}else {
-    		// contenido vacio
-    		return Response.status(Status.NO_CONTENT).build(); 
-
-    	}
+    		return Response.ok(databasesDTO).build();
+        }else {
+        	return Response.status(Status.NO_CONTENT).build(); 
+        }
     }
+   
     
  	// metodo para que el usuario pueda crear bases de datos
  	@POST
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
- 	public Response createDatabase(@PathParam("id") String userId, JsonObject jsonObject) { 		
+ 	public Response createDatabase(@PathParam("id") String idUser, JsonObject jsonObject) { 		
  		logger.info("HE RECIBIDO TU SOLICITUD DE CREAR BASE");
         // Obtener los valores de las propiedades del JsonObject
-        String nombre = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
+        String databaseName = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
         JsonValue key_value = jsonObject.get("key");
         Object key;
         if (key_value instanceof JsonNumber) {
@@ -112,10 +115,10 @@ public class UsersEndpoint
         }
         
         logger.info("HE RECIBIDO TU NOMBRE");
- 		logger.info(nombre);
+ 		logger.info(databaseName);
  		
  		logger.info("HE RECIBIDO TU ID");
- 		logger.info(userId);
+ 		logger.info(idUser);
  		
  		logger.info("HE RECIBIDO TU KEY");
  		logger.info(key.toString()+ " DE TIPO "+ key.getClass().getName());
@@ -128,8 +131,8 @@ public class UsersEndpoint
   		logger.info("HE CREADO TU HASHMAP");
   		logger.info(datos.toString());
  		// crear la base de datos
- 		String databaseUrl = "/u/" + userId + "/db/" + nombre;
- 		boolean created = impl.createDatabase(nombre, userId, datos, databaseUrl);
+ 		String databaseUrl = "/u/" + idUser + "/db/" + databaseName; 		
+ 		boolean created = impl.createDatabase(idUser, databaseName, databaseUrl, datos);
  		logger.info("HE CREADO TU DATABASE CON EXITO? "+created);
  		// Construye la URL de la base de datos
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
@@ -149,7 +152,7 @@ public class UsersEndpoint
 		logger.info(userId);
 		logger.info("TU DATABASE NAME ES");
 		logger.info(databaseName);
-		return DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName).orElse(null));
+		return DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName));
 	}
  	
  	/**

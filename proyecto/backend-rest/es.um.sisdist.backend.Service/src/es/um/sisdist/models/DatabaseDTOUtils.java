@@ -8,7 +8,6 @@ public class DatabaseDTOUtils {
 	public static DataBase fromDTO(DatabaseDTO dto) {
 		DataBase database = new DataBase(dto.getName());
 		database.setId(dto.getId());
-		database.setIdUser(dto.getIdUser());
 		database.setHashMap(dto.getHashMap());
 		database.setUrl(dto.getUrl());
 		return database;
@@ -18,7 +17,6 @@ public class DatabaseDTOUtils {
 	public static DatabaseDTO toDTO(DataBase database) {
 		DatabaseDTO dto = new DatabaseDTO(database.getName());
 		dto.setId(database.getId());
-		dto.setIdUser(database.getIdUser());
 		dto.setHashMap(database.getHashMap());
 		dto.setUrl(database.getUrl());
 		return dto;

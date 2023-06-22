@@ -188,7 +188,6 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	    try {
 	        DataBase database = new DataBase(db); // Crear objeto DataBase con el nombre db
 	        database.setId(UUID.randomUUID().toString()); // Generar un ID único para la base de datos
-	        database.setIdUser(idUser); // Asignar el ID del usuario asociado
 	        database.setHashMap(datos); // Asignar el map de pares clave-valor
 	        database.setUrl(url); // Asignar la URL
 

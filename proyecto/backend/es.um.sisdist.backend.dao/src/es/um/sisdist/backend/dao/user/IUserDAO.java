@@ -1,18 +1,26 @@
 package es.um.sisdist.backend.dao.user;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Optional;
 
+import es.um.sisdist.backend.dao.models.DataBase;
 import es.um.sisdist.backend.dao.models.User;
 
 public interface IUserDAO
 {
-    public Optional<User> getUserById(String id);
+    public Optional<User> getUserById(String idUser);
 
-    public Optional<User> getUserByEmail(String email);
+    public Optional<User> getUserByEmail(String emailUser);
     
-    public void addVisits(String email); // incrementa el numero de visitas
-    public boolean insertUser(String email, String name, String password);
-    public boolean deleteUser(String email);
+    public void addVisits(String emailUser); // incrementa el numero de visitas
+    public boolean insertUser(String emailUser, String nameUser, String passwordUser);
+    public boolean deleteUser(String emailUser);
     public boolean updateUser(User user);
+    public boolean insertDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos);
+	public boolean deleteDatabase(String idUser, String databaseName);
+	public DataBase getDatabase(String idUser, String databaseName);
+	public boolean deleteClaveValor(String idUser, String databaseName, String clave);
+	public Optional<LinkedList<DataBase>> getDatabases(String idUser);
  
 }
