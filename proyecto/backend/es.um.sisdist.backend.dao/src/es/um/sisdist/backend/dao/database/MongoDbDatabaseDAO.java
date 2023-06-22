@@ -33,6 +33,7 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 
 import es.um.sisdist.backend.dao.models.DataBase;
+import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.utils.Lazy;
 
 
@@ -73,12 +74,10 @@ public class MongoDbDatabaseDAO implements IDatabaseDAO {
 	// debe de modificarse para añadir el user ID
 
 	@Override
-	public DataBase getDatabase(String databaseName) {
+	public Optional<DataBase> getDatabase(String userId, String databaseName) {
 		try {
-			MongoCollection<DataBase> mongoCollection = collection.get(); // Obtener la colección de la base de datos
-			DataBase result = mongoCollection.find(eq("name", databaseName)).first();
-
-			return result;
+			Optional<DataBase> database = Optional.ofNullable(collection.get().find(Filters.and(Filters.eq("name", databaseName), Filters.eq("idUser", userId))).first());
+			return database;
 		} catch (Exception e) {
 		}
 

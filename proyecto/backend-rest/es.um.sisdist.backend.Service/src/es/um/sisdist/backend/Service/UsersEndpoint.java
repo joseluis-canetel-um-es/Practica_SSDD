@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.DataBase;
+import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.DatabaseDTO;
 import es.um.sisdist.models.DatabaseDTOUtils;
 import es.um.sisdist.models.UserDTO;
@@ -113,6 +114,9 @@ public class UsersEndpoint
         logger.info("HE RECIBIDO TU NOMBRE");
  		logger.info(nombre);
  		
+ 		logger.info("HE RECIBIDO TU ID");
+ 		logger.info(userId);
+ 		
  		logger.info("HE RECIBIDO TU KEY");
  		logger.info(key.toString()+ " DE TIPO "+ key.getClass().getName());
  		
@@ -126,6 +130,7 @@ public class UsersEndpoint
  		// crear la base de datos
  		String databaseUrl = "/u/" + userId + "/db/" + nombre;
  		boolean created = impl.createDatabase(nombre, userId, datos, databaseUrl);
+ 		logger.info("HE CREADO TU DATABASE CON EXITO? "+created);
  		// Construye la URL de la base de datos
  		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
  		if(created) {
@@ -139,11 +144,12 @@ public class UsersEndpoint
 	@GET
 	@Path("/{id}/db/{name}")
 	public DatabaseDTO getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
-		// Optional<DataBase> db = impl.getDatabase(databaseName);
-
-		// return Response.ok().build();
-		return DatabaseDTOUtils.toDTO(impl.getDatabase(databaseName).orElse(null));
-
+		logger.info("SE QUE QUIERES UNA BASE DE DATOS");
+		logger.info("TU ID ES");
+		logger.info(userId);
+		logger.info("TU DATABASE NAME ES");
+		logger.info(databaseName);
+		return DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName).orElse(null));
 	}
  	
  	/**

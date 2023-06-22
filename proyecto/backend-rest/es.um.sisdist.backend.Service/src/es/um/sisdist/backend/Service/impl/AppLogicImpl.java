@@ -133,9 +133,10 @@ public class AppLogicImpl
     */
     
     // devuelve la database dado su nombre
-    public Optional<DataBase> getDatabase(String db) {
-    	return Optional.of(daodb.getDatabase(db));
-    	//return null;
+    public Optional<DataBase> getDatabase(String userID, String db) {    	
+    	logger.info("AppLogicImpl: getDatabase");
+    	Optional<DataBase> d = daodb.getDatabase(userID, db);
+        return d;
     }
     
     // dado un id de usuario retorna las bases de datos relacioandos

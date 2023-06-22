@@ -68,7 +68,7 @@ public class SQLDatabaseDAO implements IDatabaseDAO {
 	}
 
 	@Override
-	public DataBase getDatabase(String databaseId) {
+	public Optional<DataBase> getDatabase(String userID, String databaseId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

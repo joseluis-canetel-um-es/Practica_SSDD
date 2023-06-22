@@ -63,7 +63,11 @@
           </li>
           
           <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('viewDatabases') }}">Visualisar Databases</a>
+            <a class="nav-link" href="{{ url_for('viewDatabases') }}">Visualisar Databases</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('databaseInfo') }}">Obtener Database</a>
           </li>
           {% else %}
           <li class="nav-item">

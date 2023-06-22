@@ -13,7 +13,6 @@ from forms import LoginForm, RegistrationForm, DatabaseForm
 import hashlib
 import logging
 
-
 app = Flask(__name__, static_url_path='')
 login_manager = LoginManager()
 login_manager.init_app(app) # Para mantener la sesión
@@ -134,12 +133,14 @@ def createDatabases():
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
             error =  "Database registrada correctamente : "+str(response.headers.get('Location'))
+            return redirect(url_for('databaseInfo', databasename=name))
         elif response.status_code == 400:
             error = 'No se ha podido crear la base de datos'
         else:
             error = 'Error no controlado'
     return render_template('createDatabases.html', form=form, error=error)
 
+"""
 @app.route('/viewDatabases', methods=['GET'])
 @login_required
 def viewDatabases():
@@ -161,28 +162,47 @@ def viewDatabases():
     else:
         error = 'No se ha podido obtener las bases de datos'
     return render_template('viewDatabases.html', error = error)    
+"""
 
-
-
-@app.route('/database/<database_name>', methods=['GET'])
-def database_info(database_name):
-    # obtener la información de UNA base de datos con el ID proporcionado
+@app.route('/viewDatabases', methods=['GET'])
+@login_required
+def viewDatabases():
+    # funcion para mostrar todas las bases de datos de un usuario (muestra los nombres o links)
+    id = current_user.id
     try:
-        # @Path("/{id}/db/{name}")
-        id = current_user.id
-        response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/'+database_name)
+        response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/')
     except:
-        error = "No se ha podido hacer la conexion"
-
+        error = 'No se ha podido hacer la conexion'
+    
     if response.status_code == 200:
-
         database = response.json()
         return render_template('databaseInfo.html', database = database)
-   
+
     else:
         error = 'No se ha recibido la base de datos'
-        return render_template('base.html', error = error)
-   # return render_template('databaseInfo.html', database_name=database_name)
+    return render_template('viewDatabases.html', error = error)    
+
+
+@app.route('/databaseInfo', methods=['GET'])
+@login_required
+def databaseInfo():
+    id = current_user.id
+    databasename = request.args.get('databasename')
+    logging.basicConfig(level=logging.DEBUG)
+    logging.info('Voy a por la BBDD')
+    logging.info('http://backend-rest:8080/Service/u/'+id+'/db/'+databasename)
+    try:
+        response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/'+databasename)
+    except:
+        error = 'No se ha podido hacer la conexion'
+    if response.status_code == 200:
+        logging.info('VAMOSSSS')
+        database = response.json()
+        return render_template('databaseInfo.html', databasename = databasename)
+    else:
+        logging.info('PEO PA TI')
+        error = 'No se ha recibido la base de datos'
+    return render_template('databaseInfo.html', databasename = databasename) 
 
 
 @app.route('/logout')
