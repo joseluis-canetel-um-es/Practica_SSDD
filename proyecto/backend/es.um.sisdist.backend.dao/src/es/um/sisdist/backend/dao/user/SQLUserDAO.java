@@ -217,4 +217,10 @@ public class SQLUserDAO implements IUserDAO
 		return Optional.empty();
 	}
 
+	@Override
+	public boolean insertClaveValor(String idUser, String databaseName, String clave, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

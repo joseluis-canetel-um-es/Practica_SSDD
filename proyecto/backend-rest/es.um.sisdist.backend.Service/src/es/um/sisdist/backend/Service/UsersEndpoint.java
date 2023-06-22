@@ -60,7 +60,6 @@ public class UsersEndpoint
     @Path("/{id}/dbinfo")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDatabasesUser(@PathParam ("id") String userID) {
- 		logger.info("HE RECIBIDO TU SOLICITUD DE OBTENER BASES DE DATOS");
  		Optional<LinkedList<DataBase>> databases = impl.getDatabasesByUserId(userID);
  		if (databases.isPresent()) {
  			LinkedList<DatabaseDTO> databasesDTO = new LinkedList<DatabaseDTO>();
@@ -76,12 +75,8 @@ public class UsersEndpoint
     // metodo consulta de bases de datos
  	@GET
  	@Path("/{id}/db/{name}")
- 	public Response getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
- 		logger.info("Quieres una BBDD");
- 		DatabaseDTO dto = DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName));
- 		logger.info("TE ENVIO ESTA BBDD");
- 		logger.info(dto.toString());
- 		return Response.ok(dto).build();
+ 	public DatabaseDTO getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
+ 		return DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName));
  	}
    
     
@@ -90,7 +85,6 @@ public class UsersEndpoint
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
  	public Response createDatabase(@PathParam("id") String idUser, JsonObject jsonObject) { 		
-        // Obtener los valores de las propiedades del JsonObject
         String databaseName = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
         String key = jsonObject.getString("key");
         String value = jsonObject.getString("value");
@@ -121,7 +115,24 @@ public class UsersEndpoint
  	        }
  	    
  	}
+ 	*/
  	
+ // Añadir un par clave/valor de la base de datos
+   	@POST
+   	@Path("/{id}/db/{dbid}/a")
+   	public Response addKeyValue(@PathParam("id") String userId, @PathParam("dbid") String databaseId, JsonObject jsonObject) {
+   		String key = jsonObject.getString("key");
+        String value = jsonObject.getString("value");
+  		boolean added = impl.insertKeyValue(userId, databaseId, key, value);
+
+   		if (added) {
+  			return Response.ok().build(); // Respuesta HTTP 200 OK si se eliminó correctamente
+  		} else {
+  			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server
+  		}
+   	    
+   	}
+   	
  	// Eliminar un par clave/valor de la base de datos
  	@DELETE
  	@Path("/{id}/db/{dbid}/d/{key}")
@@ -135,5 +146,6 @@ public class UsersEndpoint
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build(); // Respuesta HTTP 500 Internal Server
 		}
  	    
- 	}*/
+ 	}
+ 	
 }

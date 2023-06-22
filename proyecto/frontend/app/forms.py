@@ -21,3 +21,13 @@ class DatabaseForm(FlaskForm):
     key = StringField('key', validators=[InputRequired()])
     value = StringField('value', validators=[InputRequired()])
     submit = SubmitField('Create database')
+
+# clase definida para añadir claves en la base de datos
+class AddKeyValueForm(FlaskForm):
+    key = StringField('key', validators=[InputRequired()])
+    value = StringField('value', validators=[InputRequired()])
+    submit = SubmitField('Add')
+
+class RemoveKeyValueForm(FlaskForm):
+    key = StringField('key', validators=[InputRequired()])
+    submit = SubmitField('Remove')

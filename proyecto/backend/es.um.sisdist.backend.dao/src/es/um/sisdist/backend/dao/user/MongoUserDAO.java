@@ -204,11 +204,40 @@ public class MongoUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean deleteClaveValor(String idUser, String databaseName, String clave) {
+	public Optional<LinkedList<DataBase>> getDatabases(String idUser) {
+		try {
+			Optional<LinkedList<DataBase>> databases = Optional.ofNullable(collection.get().find(eq("id", idUser)).first().getDatabases());
+			return databases;
+		}catch (Exception e) {
+			logger.info("ERROR SEÑOR AGENTE");
+            return null;
+        }
+	}
+
+	@Override
+	public boolean insertClaveValor(String idUser, String databaseId, String clave, String value) {
 		try {
 			LinkedList<DataBase> databases = collection.get().find(eq("id", idUser)).first().getDatabases();
 			for (DataBase database : databases) {
-			    if (database.getName().equals(databaseName)) {
+			    if (database.getId().equals(databaseId)) {
+			    	database.addPar(clave, value);
+			    }
+			}
+            Document filter = new Document("id", idUser);
+            Document update = new Document("$set", new Document("databases", databases));
+            com.mongodb.client.result.UpdateResult result = collection.get().updateOne(filter, update);
+            return result.getModifiedCount() > 0;
+        } catch (Exception e) {
+            return false;
+        }
+	}
+	
+	@Override
+	public boolean deleteClaveValor(String idUser, String databaseId, String clave) {
+		try {
+			LinkedList<DataBase> databases = collection.get().find(eq("id", idUser)).first().getDatabases();
+			for (DataBase database : databases) {
+				if (database.getId().equals(databaseId)) {
 			    	database.removePar(clave);
 			    }
 			}
@@ -220,16 +249,5 @@ public class MongoUserDAO implements IUserDAO
             return false;
         }
 		
-	}
-
-	@Override
-	public Optional<LinkedList<DataBase>> getDatabases(String idUser) {
-		try {
-			Optional<LinkedList<DataBase>> databases = Optional.ofNullable(collection.get().find(eq("id", idUser)).first().getDatabases());
-			return databases;
-		}catch (Exception e) {
-			logger.info("ERROR SEÑOR AGENTE");
-            return null;
-        }
 	}
 }

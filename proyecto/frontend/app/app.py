@@ -8,7 +8,7 @@ import os
 from models import users, User
 
 # Login
-from forms import LoginForm, RegistrationForm, DatabaseForm
+from forms import LoginForm, RegistrationForm, DatabaseForm, AddKeyValueForm, RemoveKeyValueForm
 
 import hashlib
 import logging
@@ -138,22 +138,45 @@ def viewDatabases():
         error = 'No se ha podido obtener las bases de datos'
     return render_template('viewDatabases.html', error = error)    
 
-@app.route('/databaseInfo', methods=['GET'])
+@app.route('/databaseInfo')
 @login_required
 def databaseInfo():
-    logging.basicConfig(level=logging.DEBUG)
-    id = current_user.id
-    databasename = request.args.get('databasename')
-    try:
-        response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/'+databasename)
-    except:
-        error = 'No se ha podido hacer la conexion'
-    if response.status_code == 200:
-        database = response.json()
-        return render_template('databaseInfo.html', databasename = databasename, database = database)
-    else:
-        error = 'No se ha recibido la base de datos'
-    return render_template('databaseInfo.html', databasename = databasename)  
+    error1 = None
+    error2 = None
+    form1 = AddKeyValueForm(None if request.method != 'POST' else request.form)
+    form2 = RemoveKeyValueForm(None if request.method != 'POST' else request.form)
+    database = request.args.get('database')
+    if request.method == "POST": 
+        if form1.validate():
+            id = current_user.id
+            dbid = database.id
+            key = form1.key.data
+            value = form1.value.data 
+            cabecera = {"Content-Type" : "application/json"}
+            datos_database = {"key" : key, "value": value}
+            response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db/'+dbid+'/a', headers = cabecera, json=datos_database)
+            if response.status_code == 200:
+                return render_template('databaseInfo.html', database = database, form1 = form1)
+            elif response.status_code == 400:
+                error1 = 'No se ha podido crear la base de datos'
+                return render_template('databaseInfo.html', database = database, form1 = form1, error1=error1)
+            else:
+                error1 = 'Error no controlado'
+                return render_template('databaseInfo.html', database = database, form1 = form1, error1=error1)
+        elif form2.validate():
+            id = current_user.id
+            dbid = database.id
+            key = form2.key.data
+            response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db/'+dbid+'/d/'+key)
+            if response.status_code == 200:
+                return render_template('databaseInfo.html', database = database, form2 = form2)
+            elif response.status_code == 400:
+                error2 = 'No se ha podido crear la base de datos'
+                return render_template('databaseInfo.html', database = database, form2 = form2, error2=error2)
+            else:
+                error2 = 'Error no controlado'
+                return render_template('databaseInfo.html', database = database, form1 = form1, error2=error2)
+    return render_template('databaseInfo.html', database = database, form1 = form1, form2 = form2, error1=error1, error2=error2) 
 
 @app.route('/logout')
 @login_required

@@ -54,10 +54,4 @@ public class DatabaseDTO {
 		this.pares = pares;
 	}
 
-	@Override
-	public String toString() {
-		return "DatabaseDTO [id=" + id + ", name=" + name + ", url=" + url + ", pares=" + pares + "]";
-	}
-	
-	
 }

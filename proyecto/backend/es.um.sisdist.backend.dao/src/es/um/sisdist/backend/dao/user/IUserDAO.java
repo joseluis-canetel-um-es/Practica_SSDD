@@ -20,7 +20,8 @@ public interface IUserDAO
     public boolean insertDatabase(String idUser, String databaseName, String url, LinkedList<String> pares);
 	public boolean deleteDatabase(String idUser, String databaseName);
 	public DataBase getDatabase(String idUser, String databaseName);
-	public boolean deleteClaveValor(String idUser, String databaseName, String clave);
+	public boolean insertClaveValor(String idUser, String databaseId, String clave, String value);
+	public boolean deleteClaveValor(String idUser, String databaseId, String clave);
 	public Optional<LinkedList<DataBase>> getDatabases(String idUser);
  
 }
