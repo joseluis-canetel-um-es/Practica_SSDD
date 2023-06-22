@@ -102,33 +102,11 @@ def createDatabases():
         name = form.name.data
         key = form.key.data
         value = form.value.data
-        key_convertido = None
-        try:
-            # Intentar convertir a entero
-            key_convertido = int(key)
-        except ValueError:
-            try:
-                # Intentar convertir a número en coma flotante
-                key_convertido = float(key)
-            except ValueError:
-                # Valor no numérico, se considera una cadena de caracteres
-                key_convertido = str(key)
-        valor_convertido = None
-        try:
-            # Intentar convertir a entero
-            valor_convertido = int(value)
-        except ValueError:
-            try:
-                # Intentar convertir a número en coma flotante
-                valor_convertido = float(value)
-            except ValueError:
-                # Valor no numérico, se considera una cadena de caracteres
-                valor_convertido = str(value)
 
         cabecera = {"Content-Type" : "application/json"}
         # llamar a backend para peticion de almacenar
         # password modificado para tomar el hash
-        datos_database = {"name" : name, "key" : key_convertido, "value":valor_convertido}
+        datos_database = {"name" : name, "key" : key, "value": value}
         # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
@@ -144,7 +122,6 @@ def createDatabases():
 def viewDatabases():
     # funcion para mostrar todas las bases de datos de un usuario (muestra los nombres o links)
     id = current_user.id
-    logging.info("MI ID ES "+id)
     try:
         response = requests.get('http://backend-rest:8080/Service/u/'+id+'/dbinfo')
     except:
@@ -152,9 +129,6 @@ def viewDatabases():
     
     if response.status_code == 200:
         databases = response.json()
-        logging.basicConfig(level=logging.DEBUG)
-        logging.info('HE OBTENIDO')
-        logging.info(databases)
         return render_template('viewDatabases.html', databases = databases)
 
     elif response.status_code == 204:
@@ -167,24 +141,19 @@ def viewDatabases():
 @app.route('/databaseInfo', methods=['GET'])
 @login_required
 def databaseInfo():
+    logging.basicConfig(level=logging.DEBUG)
     id = current_user.id
     databasename = request.args.get('databasename')
-    logging.basicConfig(level=logging.DEBUG)
-    logging.info('Voy a por la BBDD')
-    logging.info('http://backend-rest:8080/Service/u/'+id+'/db/'+databasename)
     try:
         response = requests.get('http://backend-rest:8080/Service/u/'+id+'/db/'+databasename)
     except:
         error = 'No se ha podido hacer la conexion'
     if response.status_code == 200:
-        logging.info('VAMOSSSS')
         database = response.json()
-        return render_template('databaseInfo.html', databasename = databasename)
+        return render_template('databaseInfo.html', databasename = databasename, database = database)
     else:
-        logging.info('PEO PA TI')
         error = 'No se ha recibido la base de datos'
-    return render_template('databaseInfo.html', databasename = databasename) 
-
+    return render_template('databaseInfo.html', databasename = databasename)  
 
 @app.route('/logout')
 @login_required

@@ -120,8 +120,8 @@ public class AppLogicImpl
     
     // crea una base de datos relacionada al id de un usuario
     // se debe insertar un valor inicial en la lista
-    public boolean createDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos) {
-    	return dao.insertDatabase(idUser, databaseName, url, datos);
+    public boolean createDatabase(String idUser, String databaseName, String url, LinkedList<String> pares) {
+    	return dao.insertDatabase(idUser, databaseName, url, pares);
     }
     
   /**
@@ -139,17 +139,14 @@ public class AppLogicImpl
     
     // dado un id de usuario retorna las bases de datos relacioandos
     public Optional<LinkedList<DataBase>> getDatabasesByUserId(String userId) {
-    	logger.info("HE ENTRADO EN APPLOGIC");
+    	logger.info("HE ENTRADO EN APPLOGIC Y VOY A OBTENER DBS");
         try {
-        	
-           Optional<LinkedList<DataBase>> databases = dao.getDatabases(userId);
-           logger.info("MIS DATABSES SON");
-           logger.info(databases.toString());
-           return databases;
+        	Optional<LinkedList<DataBase>> databases = dao.getDatabases(userId);
+        	return databases;
         } catch (Exception e) {
             // Manejar la excepción según sea necesario
         }
-        logger.info("TE VOY A DEVOLCER UN PEDAZO DE NULL");
+        logger.info("TE VOY A DEVOLVER UN PEDAZO DE NULL");
         return null;
     }
     

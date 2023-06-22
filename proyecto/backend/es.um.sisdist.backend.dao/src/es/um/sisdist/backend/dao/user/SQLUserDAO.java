@@ -187,13 +187,20 @@ public class SQLUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean insertDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos) {
+	public boolean insertDatabase(String idUser, String databaseName, String url, LinkedList<String> pares) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean deleteDatabase(String idUser, String databaseName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	@Override
+	public boolean deleteClaveValor(String idUser, String databaseName, String clave) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -205,14 +212,9 @@ public class SQLUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean deleteClaveValor(String idUser, String databaseName, String clave) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Optional<LinkedList<DataBase>> getDatabases(String idUser) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
 	}
+
 }

@@ -2,19 +2,16 @@
 
 {% block content %}
     <h1>Database Information</h1>
-
-    {% if database %}
-        <h2>Name: {{ database['name'] }}</h2>
-        <h2>URL: {{ database['url'] }}</h2>
-
-        <h2>Hash Map:</h2>
-        <ul>
-            {% for key, value in database['hashMap'].items() %}
-                <li>{{ key }}: {{ value }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No se ha recibido la base de datos.</p>
-    {% endif %}
+    {{ database.id }} <br>
+    {{ database.name }} <br>
+    {{ database.url }} <br>
+    <ul>
+        {% for par in database.pares %}
+        <li>
+            {% set pair = par.split(":") %}
+            <strong>Clave:</strong> {{ pair[0] }} <br>
+            <strong>Valor:</strong> {{ pair[1] }}
+        </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
-

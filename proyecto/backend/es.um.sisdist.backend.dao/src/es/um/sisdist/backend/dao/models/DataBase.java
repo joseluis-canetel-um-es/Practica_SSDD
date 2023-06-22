@@ -1,7 +1,6 @@
 package es.um.sisdist.backend.dao.models;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * 
@@ -11,27 +10,23 @@ public class DataBase {
     private String id;
 	private String name;
 	private String url;
-	private HashMap<String, Object> hashMap;
-
+	private LinkedList<String> pares;
 
 	public DataBase(String name) {
 		this.name = name;
-		this.hashMap = new HashMap<String, Object>();
+		this.pares = new LinkedList<String>();
+	}
+	
+	public DataBase() {
 	}
 
-	
-	
 	public String getUrl() {
 		return url;
 	}
 
-
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-
 
 	public String getId() {
 		return id;
@@ -49,19 +44,29 @@ public class DataBase {
 		this.name = name;
 	}
 
-	public HashMap<String, Object> getHashMap() {
-		return hashMap;
-	}
-
-	public void setHashMap(HashMap<String, Object> datos) {
-		hashMap.putAll(datos);
+	public LinkedList<String> getPares() {
+		return pares;
 	}
 	
-	public void addPar(String key, Object value) {
-		this.hashMap.put(key, value);
+	public void setPares(LinkedList<String> pares) {
+		this.pares = pares;
 	}
 	
-	public void deletePar(Object key) {
-		this.hashMap.remove(key);
+	public void addPar(String key, String value) {
+		String par = key+":"+value;
+		pares.add(par);
+	}
+	
+	public void removePar(String key) {
+		for(String par : pares) {
+			if(par.contains(key+":")) {
+				pares.remove(par);
+			}
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "DataBase [id=" + id + ", name=" + name + ", url=" + url + ", pares=" + pares + "]";
 	}
 }

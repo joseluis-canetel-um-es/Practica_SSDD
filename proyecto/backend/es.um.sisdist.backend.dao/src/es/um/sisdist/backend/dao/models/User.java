@@ -140,7 +140,7 @@ public class User
 
 	}
 	
-	public void addPar(String databaseName, String key, Object value) {
+	public void addPar(String databaseName, String key, String value) {
 		for(DataBase database: databases) {
 			if(database.getName().equals(databaseName)) {
 				database.addPar(key, value);
@@ -148,10 +148,10 @@ public class User
 		}
 	}
 	
-	public void deletePar(String databaseName, Object key) {
+	public void deletePar(String databaseName, String key) {
 		for(DataBase database: databases) {
 			if(database.getName().equals(databaseName)) {
-				database.deletePar(key);
+				database.removePar(key);
 			}
 		}
 	}

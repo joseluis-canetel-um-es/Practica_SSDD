@@ -2,33 +2,33 @@ package es.um.sisdist.models;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 @XmlRootElement
 public class DatabaseDTO {
 	private String id;
 	private String name;
 	private String url;
-	private HashMap<String, Object> hashMap;
+	private LinkedList<String> pares;
 
 
 	public DatabaseDTO(String name) {
+		super();
 		this.name = name;
-		this.hashMap = new HashMap<String, Object>();
+		this.pares = new LinkedList<String>();
 	}
 
-	
+	public DatabaseDTO()
+    {
+    }
 	
 	public String getUrl() {
 		return url;
 	}
 
-
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-
 
 	public String getId() {
 		return id;
@@ -46,12 +46,18 @@ public class DatabaseDTO {
 		this.name = name;
 	}
 
-	public HashMap<String, Object> getHashMap() {
-		return hashMap;
+	public LinkedList<String> getPares() {
+		return pares;
 	}
 
-	public void setHashMap(HashMap<String, Object> datos) {
-		hashMap.putAll(datos);
+	public void setPares(LinkedList<String> pares) {
+		this.pares = pares;
 	}
+
+	@Override
+	public String toString() {
+		return "DatabaseDTO [id=" + id + ", name=" + name + ", url=" + url + ", pares=" + pares + "]";
+	}
+	
 	
 }

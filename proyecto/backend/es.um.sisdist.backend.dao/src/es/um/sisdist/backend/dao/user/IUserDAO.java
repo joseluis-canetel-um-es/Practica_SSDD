@@ -1,6 +1,6 @@
 package es.um.sisdist.backend.dao.user;
 
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public interface IUserDAO
     public boolean insertUser(String emailUser, String nameUser, String passwordUser);
     public boolean deleteUser(String emailUser);
     public boolean updateUser(User user);
-    public boolean insertDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos);
+    public boolean insertDatabase(String idUser, String databaseName, String url, LinkedList<String> pares);
 	public boolean deleteDatabase(String idUser, String databaseName);
 	public DataBase getDatabase(String idUser, String databaseName);
 	public boolean deleteClaveValor(String idUser, String databaseName, String clave);

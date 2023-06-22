@@ -9,13 +9,13 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import static java.util.Arrays.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
@@ -28,10 +28,11 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-import es.um.sisdist.backend.dao.models.DataBase;
-import es.um.sisdist.backend.dao.models.User;
+import es.um.sisdist.backend.dao.models.*;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.utils.Lazy;
+
+
 
 /**
  * @author dsevilla
@@ -39,6 +40,7 @@ import es.um.sisdist.backend.dao.utils.Lazy;
  */
 public class MongoUserDAO implements IUserDAO
 {
+    private static final Logger logger = Logger.getLogger(MongoUserDAO.class.getName());
     private Supplier<MongoCollection<User>> collection;
 
     public MongoUserDAO()
@@ -138,17 +140,30 @@ public class MongoUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean insertDatabase(String idUser, String databaseName, String url, HashMap<String, Object> datos) {
+	public boolean insertDatabase(String idUser, String databaseName, String url, LinkedList<String> pares) {
 		try {
 			DataBase database = new DataBase(databaseName); // Crear objeto DataBase con el nombre db
 	        database.setId(UUID.randomUUID().toString()); // Generar un ID único para la base de datos
 	        database.setUrl(url); // Asignar la URL
-	        database.setHashMap(datos); // Asignar el map de pares clave-valor
+	        database.setPares(pares); // Asignar la lista de pares clave-valor
 	        LinkedList<DataBase> databases = collection.get().find(eq("id", idUser)).first().getDatabases();
 	        databases.add(database);
+	        logger.info("ESTA ES LA DATABASE QUE INSERTAS");
+	        logger.info(database.toString());
             Document filter = new Document("id", idUser);
             Document update = new Document("$set", new Document("databases", databases));
             com.mongodb.client.result.UpdateResult result = collection.get().updateOne(filter, update);
+            
+            /*
+            Optional<User> user = Optional.ofNullable(collection.get().find(eq("id", idUser)).first());
+            if(user.isPresent()) {
+            	logger.info("ESTE ES EL USUARIO CON LA NUEVA BBDD");
+    	        logger.info(user.toString());
+            }else {
+            	logger.info("AQUI NO HAY USER");
+            }
+            */
+            
             return result.getModifiedCount() > 0;
         } catch (Exception e) {
             return false;
@@ -194,7 +209,7 @@ public class MongoUserDAO implements IUserDAO
 			LinkedList<DataBase> databases = collection.get().find(eq("id", idUser)).first().getDatabases();
 			for (DataBase database : databases) {
 			    if (database.getName().equals(databaseName)) {
-			    	database.deletePar(clave);
+			    	database.removePar(clave);
 			    }
 			}
 			Document filter = new Document("id", idUser);
@@ -211,8 +226,9 @@ public class MongoUserDAO implements IUserDAO
 	public Optional<LinkedList<DataBase>> getDatabases(String idUser) {
 		try {
 			Optional<LinkedList<DataBase>> databases = Optional.ofNullable(collection.get().find(eq("id", idUser)).first().getDatabases());
-	        return databases;
+			return databases;
 		}catch (Exception e) {
+			logger.info("ERROR SEÑOR AGENTE");
             return null;
         }
 	}

@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Application;
 public class ServiceApp extends Application
 {
 	// configurar características adicionales de JAX-RS
-	
+	/*
 		 @Override
 		    public Map<String, Object> getProperties() {
 		        Map<String, Object> properties = new HashMap<>();
@@ -20,4 +20,5 @@ public class ServiceApp extends Application
 		       // properties.put("jersey.config.server.response.encoding", "UTF-8");
 		        return properties;
 		    }
+	*/
 }

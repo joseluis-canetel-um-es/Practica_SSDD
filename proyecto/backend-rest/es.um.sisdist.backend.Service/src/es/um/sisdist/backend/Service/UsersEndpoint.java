@@ -61,21 +61,28 @@ public class UsersEndpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDatabasesUser(@PathParam ("id") String userID) {
  		logger.info("HE RECIBIDO TU SOLICITUD DE OBTENER BASES DE DATOS");
-
  		Optional<LinkedList<DataBase>> databases = impl.getDatabasesByUserId(userID);
- 		if (databases.isPresent())
-        {
- 			logger.info("HE ENTRADO EN DB NO NULL");
-
+ 		if (databases.isPresent()) {
  			LinkedList<DatabaseDTO> databasesDTO = new LinkedList<DatabaseDTO>();
-    		for( DataBase db : databases.get()) {
-    			databasesDTO.add( DatabaseDTOUtils.toDTO(db) );
-    		}		
-    		return Response.ok(databasesDTO).build();
-        }else {
-        	return Response.status(Status.NO_CONTENT).build(); 
-        }
+ 			for( DataBase db : databases.get()) {
+ 				databasesDTO.add( DatabaseDTOUtils.toDTO(db) );
+ 			}		
+ 			return Response.ok(databasesDTO).build();
+ 		}else {
+ 			return Response.status(Status.BAD_REQUEST).build();
+ 		}
     }
+    
+    // metodo consulta de bases de datos
+ 	@GET
+ 	@Path("/{id}/db/{name}")
+ 	public Response getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
+ 		logger.info("Quieres una BBDD");
+ 		DatabaseDTO dto = DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName));
+ 		logger.info("TE ENVIO ESTA BBDD");
+ 		logger.info(dto.toString());
+ 		return Response.ok(dto).build();
+ 	}
    
     
  	// metodo para que el usuario pueda crear bases de datos
@@ -83,77 +90,20 @@ public class UsersEndpoint
     @Path("/{id}/db")
  	@Consumes(MediaType.APPLICATION_JSON)
  	public Response createDatabase(@PathParam("id") String idUser, JsonObject jsonObject) { 		
- 		logger.info("HE RECIBIDO TU SOLICITUD DE CREAR BASE");
         // Obtener los valores de las propiedades del JsonObject
         String databaseName = jsonObject.getString("name"); // NOMBRE BASE DE DATOS
-        JsonValue key_value = jsonObject.get("key");
-        Object key;
-        if (key_value instanceof JsonNumber) {
-        	JsonNumber number = (JsonNumber) key_value;
-            if (number.isIntegral()) {
-            	key = number.intValue();
-            } else {
-            	BigDecimal decimalValue = number.bigDecimalValue();
-            	key = decimalValue.floatValue();
-            }
-        } else {
-        	key = ((JsonString) key_value).getString();
-        }
-        JsonValue valor_value = jsonObject.get("value");
-        Object valor;
-        // Verificar el tipo del valor
-        if (valor_value instanceof JsonNumber) {
-        	JsonNumber number = (JsonNumber) valor_value;
-            if (number.isIntegral()) {
-            	valor = number.intValue();
-            } else {
-            	BigDecimal decimalValue = number.bigDecimalValue();
-            	valor = decimalValue.floatValue();
-            }
-        } else {
-        	valor = ((JsonString) valor_value).getString();
-        }
-        
-        logger.info("HE RECIBIDO TU NOMBRE");
- 		logger.info(databaseName);
- 		
- 		logger.info("HE RECIBIDO TU ID");
- 		logger.info(idUser);
- 		
- 		logger.info("HE RECIBIDO TU KEY");
- 		logger.info(key.toString()+ " DE TIPO "+ key.getClass().getName());
- 		
- 		logger.info("HE RECIBIDO TU CLAVE");
- 		logger.info(valor.toString()+ " DE TIPO "+ valor.getClass().getName());       
-         
-  		HashMap<String, Object> datos = new HashMap<String, Object>();
-  		datos.put(key.toString(), valor);
-  		logger.info("HE CREADO TU HASHMAP");
-  		logger.info(datos.toString());
- 		// crear la base de datos
+        String key = jsonObject.getString("key");
+        String value = jsonObject.getString("value");
+ 		LinkedList<String> pares = new LinkedList<String>();
+ 		pares.add(key+":"+value);
  		String databaseUrl = "/u/" + idUser + "/db/" + databaseName; 		
- 		boolean created = impl.createDatabase(idUser, databaseName, databaseUrl, datos);
- 		logger.info("HE CREADO TU DATABASE CON EXITO? "+created);
- 		// Construye la URL de la base de datos
- 		// Construye la respuesta con el código HTTP 201 Created y la cabecera Location
+ 		boolean created = impl.createDatabase(idUser, databaseName, databaseUrl, pares);
  		if(created) {
  			return Response.status(Response.Status.CREATED).header("Location", databaseUrl).build();
  		}else {
  			return Response.status(Response.Status.BAD_REQUEST).build();
  		}
  	}
- 	
-	// metodo consulta de bases de datos
-	@GET
-	@Path("/{id}/db/{name}")
-	public DatabaseDTO getDatabase(@PathParam("id") String userId, @PathParam("name") String databaseName) {
-		logger.info("SE QUE QUIERES UNA BASE DE DATOS");
-		logger.info("TU ID ES");
-		logger.info(userId);
-		logger.info("TU DATABASE NAME ES");
-		logger.info(databaseName);
-		return DatabaseDTOUtils.toDTO(impl.getDatabase(userId, databaseName));
-	}
  	
  	/**
  	@DELETE
