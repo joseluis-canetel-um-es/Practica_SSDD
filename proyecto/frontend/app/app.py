@@ -41,7 +41,6 @@ def login():
 
             email = form.email.data
             password = form.password.data
-            # se envia un hash del password
             credenciales = {"email": email, "password": hashlib.sha256( password.encode('utf-8')).hexdigest()}
             cabecera = {"Content-Type" : "application/json"}
 
@@ -73,10 +72,7 @@ def signup():
             password = form.password.data
 
             cabecera = {"Content-Type" : "application/json"}
-            # llamar a backend para peticion de almacenar
-            # password modificado para tomar el hash
             credenciales_registro = {"email" : email, "name" : name, "password" : hashlib.sha256( password.encode('utf-8')).hexdigest()}
-            # response . text contiene el texto ( datos ) de la respuesta
             response = requests.post('http://backend-rest:8080/Service/checkSignup', headers = cabecera, json=credenciales_registro)
             if response.status_code == 200:
                 return redirect(url_for('login')) 
@@ -104,13 +100,10 @@ def createDatabases():
         value = form.value.data
 
         cabecera = {"Content-Type" : "application/json"}
-        # llamar a backend para peticion de almacenar
-        # password modificado para tomar el hash
         datos_database = {"name" : name, "key" : key, "value": value}
-        # response . text contiene el texto ( datos ) de la respuesta
         response = requests.post('http://backend-rest:8080/Service/u/'+id+'/db', headers = cabecera, json=datos_database)
         if response.status_code == 201:
-            error =  "Database registrada correctamente : "+str(response.headers.get('Location'))
+            error =  "Database registrada correctamente"
         elif response.status_code == 400:
             error = 'No se ha podido crear la base de datos'
         else:
@@ -120,7 +113,6 @@ def createDatabases():
 @app.route('/viewDatabases', methods=['GET'])
 @login_required
 def viewDatabases():
-    # funcion para mostrar todas las bases de datos de un usuario (muestra los nombres o links)
     id = current_user.id
     try:
         response = requests.get('http://backend-rest:8080/Service/u/'+id+'/dbinfo')
@@ -187,7 +179,6 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     for user in users:
-        #if user.id == int(user_id):
         if user.id == user_id:
             return user
     return None
